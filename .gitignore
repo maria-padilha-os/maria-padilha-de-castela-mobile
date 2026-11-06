@@ -1,6 +1,41 @@
 .scratch/
+.git-local/
 out/
+build/
+.gradle/
+__pycache__/
+*.pyc
+local.properties
 *.iso
 *.img
 *.pkg.tar.zst
 .env
+*.log
+
+# Release bundles, OS images, and app artifacts stay out of Git.
+releases/
+artifacts/
+*.zip
+*.ota
+*.bin
+*.apk
+*.aab
+*.apks
+
+# Signing material must never be committed.
+keys/
+signing/
+secrets/
+*.keystore
+*.jks
+*.p12
+*.pfx
+*.pem
+*.pk8
+*.der
+
+# Vendor blobs and packet captures may be sensitive or non-redistributable.
+proprietary/
+vendor/
+*.pcap
+*.pcapng
