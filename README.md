@@ -1,78 +1,84 @@
 # Castela Mobile
 
-Public-source cybersecurity mobile image based on GrapheneOS, with the look and
-feel of Maria Padilha. **Release builds remain private.**
+Private cybersecurity mobile experience for GrapheneOS, with the look and feel
+of Maria Padilha. **This repository and all build artifacts must remain
+private.**
 
-This is **not official GrapheneOS**. It is a private project that uses the
-GrapheneOS/AOSP base and adds a Padilha design overlay plus a security panel.
+This is **not official GrapheneOS**. It is an independent project that runs on
+official GrapheneOS and adds a Padilha app layer: a launcher, wallpaper and
+theme assets, a local security panel, and a setup companion. It is not a
+GrapheneOS fork, an official GrapheneOS build, or an "unofficial build" of
+GrapheneOS.
 
 ## Status
 
-**Private build scaffold.** The GrapheneOS base is pinned, the build and signing
-entry points exist, and the offline checks run without a device. No ROM has
-been published, no proprietary vendor blob is in the repository, and no device
-has been flashed.
+**Architecture decision accepted.** [ADR 0001](docs/adr/0001-grapheneos-base-device-support-and-padilha-branding.md)
+selects a device-side Padilha overlay plus companion apps on top of official
+GrapheneOS, rather than a full GrapheneOS fork and system-image build.
 
-## Pinned base
+- Reference device: **Pixel 9a (`tegu`)**, supported by GrapheneOS through
+  April 2032.
+- First milestone: a private app suite, not a system image.
+- No ROM has been built. No device has been flashed. No artifact has been
+  released.
 
-| Item | Value |
-| --- | --- |
-| Base | GrapheneOS 17 |
-| Stable release | `2026110200` |
-| Signed tag object | `433433b931eeb4a33613a52acc545c08835e5f94` |
-| Commit | `abed042a17e948a9734e4c3927ce936b5648129f` |
-| AOSP baseline | `android-17.0.0_r1` |
-| Reference device | `tegu` (Pixel 9a), product `tegu-cur-user` |
+A full fork is deferred and requires a new ADR. See the
+[revisit triggers](docs/adr/0001-grapheneos-base-device-support-and-padilha-branding.md#revisit-triggers).
 
-The machine-readable pin is [`config/release.env`](config/release.env). The
-upstream manifest is `https://github.com/GrapheneOS/platform_manifest.git` at
-`refs/tags/2026110200`; its SSH signature is checked against the pinned
-GrapheneOS allowed-signers key before the source is synced.
+## Decision summary
 
-## Quick start
+- GrapheneOS remains the operating system and the source of OS, firmware,
+  kernel, and browser/WebView security updates.
+- Castela ships only its own signed apps: the Padilha launcher, theme/icon/
+  wallpaper layer, security panel, and setup companion.
+- The app layer covers wallpaper, palette, fonts inside Castela apps, icons, and
+  the launcher. It does **not** change the boot animation, system font, system
+  UI, or preinstalled defaults; those require a system image and are out of
+  scope.
+- The repository and artifacts stay private. Distribution to testers is a
+  redistribution event and requires the legal checklist.
+- The product is presented as "Castela Mobile, an independent project that runs
+  on GrapheneOS." Do not use the GrapheneOS name or logo as product branding.
 
-```sh
-./build.sh plan                 # pin and requirements, offline
-./build.sh check                # offline CI checks
-./build.sh doctor               # verify build host resources
-./build.sh verify-pin --network # verify the signed upstream tag
-./build.sh sync                 # source into .scratch/grapheneos
-./build.sh build --device tegu  # unsigned target-files-package
-./build.sh sign --build-number 2026110200  # local only, keys outside repo
-./tests/all.sh                  # repository tests
-```
+## Documentation
 
-`sync`, `build` and `sign` require a build host with at least 32 GiB RAM and
-236 GiB free disk. `sync` also needs network access. None of the commands flash
-a device, download vendor blobs, or publish artifacts. Device setup and flashing
-are manual and intentionally not automated.
-
-## Requirements and documentation
-
-- [Build requirements and reproducibility](docs/BUILD.md) — disk, RAM, Java,
-  Android SDK, package list, pinned manifest and build steps.
-- [CI and device boundaries](docs/CI.md) — what runs without a device, what
-  needs a build host, and what is device-only.
-- [Signing key custody](docs/SIGNING.md) — keys outside the repository, the
-  metadata-only checker, and local signing.
-- [Manifest pin](manifests/README.md) — why the signed upstream tag is the pin
-  and how to update it.
+- [ADR 0001: GrapheneOS base, device support, and Padilha branding](docs/adr/0001-grapheneos-base-device-support-and-padilha-branding.md)
+- [Attribution, trademark, and redistribution rules](docs/legal/grapheneos-aosp-attribution.md)
+- [Padilha look-and-feel scope](docs/branding/padilha-look-and-feel.md)
+- [Machine-readable design tokens](docs/branding/tokens.json)
 
 ## Planned surface
 
-- Padilha wallpaper, palette, fonts, icons, launcher, and boot treatment
-- readable light/dark colours with contrast checks
-- a dedicated security panel with authorized lab mode
+- Padilha launcher with app drawer, local search, folders, widgets, work-profile
+  support, and accessible light/dark themes
+- original wallpaper, palette, icon pack, and typography inside Castela apps
+- a dedicated local security panel with authorized lab mode
 - local network inventory, pcap review, and permission/integrity audits
-- no automatic scanning, no hidden privileged service, no telemetry
+- no automatic scanning, no hidden privileged service, no root, no telemetry
+- a setup companion that checks compatibility and links to the official
+  GrapheneOS installation and update documentation
 
-## Safety
+Out of scope for this phase: custom boot animation, system font replacement,
+system UI theming, preinstalled default apps, bootloader unlocking, ROM builds,
+and device flashing.
+
+## Safety and privacy
 
 Do not flash a device until the device matrix, recovery documentation, and
-signed build pipeline are validated. Do not publish builds; release artifacts
-remain private. Do not add vendor blobs, signing keys, public update metadata,
-or release downloads to this repository. Do not claim this is official
-GrapheneOS.
+signed build pipeline exist. Do not publish builds or artifacts; the repository
+and release artifacts remain private. Do not claim this is official GrapheneOS.
+
+The security panel is an ordinary app. It does not provide kernel, baseband, or
+privileged visibility, and it must not claim to. Packet captures may contain
+personal data: capture only on networks you own or are authorized to test, keep
+data local, and delete it when finished.
+
+## License
+
+Original Castela code and documentation are GPL-3.0-only per repository policy.
+Third-party components and assets retain their own licenses; see the
+[legal rules](docs/legal/grapheneos-aosp-attribution.md). A top-level `LICENSE`
+file is a release follow-up.
 
 ## Relationship to the other repositories
 

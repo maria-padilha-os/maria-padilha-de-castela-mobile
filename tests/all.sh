@@ -1,47 +1,82 @@
 #!/usr/bin/env bash
-# Repository test suite. Runs without a device, network, signing keys or build.
-
 set -euo pipefail
 
-ROOT=$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
-cd "$ROOT"
+root=$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+cd "$root"
 
-failures=0
+fail=0
+ok() { echo "ok $*"; }
+bad() { echo "FAIL $*"; fail=1; }
 
-printf '== shell syntax ==\n'
-syntax_failed=0
-while IFS= read -r -d '' script; do
-    if ! bash -n "$script"; then
-        printf 'FAIL shell syntax: %s\n' "$script" >&2
-        syntax_failed=1
-    fi
-done < <(
-    find "$ROOT" \
-        \( -path "$ROOT/.git" -o -path "$ROOT/.scratch" -o -path "$ROOT/out" \) -prune -o \
-        -name '*.sh' -type f -print0
-)
-if [[ $syntax_failed -eq 0 ]]; then
-    printf 'ok all shell scripts parse\n'
-else
-    failures=$((failures + 1))
-fi
+require_file() {
+  local path=$1
+  if [ -s "$path" ]; then
+    ok "$path"
+  else
+    bad "$path missing or empty"
+  fi
+}
 
-printf '\n== test scripts ==\n'
-for test in "$ROOT"/tests/test_*.sh; do
-    name=$(basename "$test")
-    printf '\n-- %s --\n' "$name"
-    if bash "$test"; then
-        printf 'PASS %s\n' "$name"
-    else
-        printf 'FAIL %s\n' "$name" >&2
-        failures=$((failures + 1))
-    fi
+for path in \
+  README.md \
+  docs/adr/0001-grapheneos-base-device-support-and-padilha-branding.md \
+  docs/legal/grapheneos-aosp-attribution.md \
+  docs/branding/padilha-look-and-feel.md \
+  docs/branding/tokens.json \
+  tests/check_docs.py \
+  tests/check_contrast.py; do
+  require_file "$path"
 done
 
-if [[ $failures -eq 0 ]]; then
-    printf '\nAll tests passed.\n'
-    exit 0
+if python3 tests/check_docs.py; then
+  ok "documentation checks"
+else
+  bad "documentation checks"
 fi
 
-printf '\nTests failed: %d group(s).\n' "$failures" >&2
-exit 1
+if python3 tests/check_contrast.py; then
+  ok "contrast checks"
+else
+  bad "contrast checks"
+fi
+
+scan_file=$(mktemp)
+trap 'rm -f "$scan_file"' EXIT
+
+scan_status=0
+grep -RInE \
+  'sk-[A-Za-z0-9]{20,}|ghp_[A-Za-z0-9]{20,}|BEGIN (RSA|OPENSSH|EC) PRIVATE KEY' \
+  --exclude-dir=.git \
+  --exclude-dir=.git-local \
+  --exclude-dir=.scratch \
+  --exclude-dir=out \
+  --exclude-dir=build \
+  --exclude-dir=.gradle \
+  --exclude='*.png' \
+  --exclude='*.jpg' \
+  --exclude='*.jpeg' \
+  --exclude='*.webp' \
+  --exclude='*.gif' \
+  . >"$scan_file" 2>/dev/null || scan_status=$?
+
+if [ "$scan_status" -eq 0 ]; then
+  bad "possible tracked secret"
+  cat "$scan_file"
+elif [ "$scan_status" -eq 1 ]; then
+  ok "no obvious tracked secret"
+else
+  bad "secret scan could not complete"
+fi
+
+tracked_artifacts=$(git ls-files | grep -E \
+  '(^|/)(out|releases|artifacts|keys|signing|secrets|proprietary|vendor)/|\.(img|iso|apk|aab|apks|keystore|jks|p12|pfx|pem|pk8|ota|bin|zip)$' \
+  || true)
+
+if [ -n "$tracked_artifacts" ]; then
+  bad "tracked build, release, or key artifact"
+  printf '%s\n' "$tracked_artifacts"
+else
+  ok "no tracked build, release, or key artifact"
+fi
+
+[ "$fail" -eq 0 ]
