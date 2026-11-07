@@ -1,6 +1,45 @@
+# Local build/scratch state. The GrapheneOS source and signed artifacts live
+# under .scratch/grapheneos and must never be committed.
 .scratch/
 out/
+releases/
+logs/
+*.log
+
+# Build artifacts and images.
 *.iso
 *.img
+*.zip
+*.tar
+*.tar.gz
+*.sig
+*.ota
 *.pkg.tar.zst
+*.apk
+*.aab
+
+# Vendor and proprietary payloads. They may exist only inside .scratch.
+vendor/
+proprietary/
+firmware/
+blobs/
+
+# Signing keys and key stores. Never commit these.
+keys/
+*.pk8
+*.pem
+*.jks
+*.keystore
+*.p12
+*.pfx
+id_ed25519
+id_ed25519.pub
+
+# Local environment and IDE state.
 .env
+.env.*
+!.env.example
+local.properties
+.gradle/
+.idea/
+.vscode/
