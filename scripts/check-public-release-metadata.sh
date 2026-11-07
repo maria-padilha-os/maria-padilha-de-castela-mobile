@@ -61,6 +61,7 @@ for entry in "${patterns[@]}"; do
     pattern="${entry#*|}"
     if matches=$(git -C "$root" grep -n -I -E -e "$pattern" -- . 2>/dev/null); then
         while IFS=: read -r file line _rest; do
+            [ "$file" = "scripts/check-public-release-metadata.sh" ] && continue
             printf 'FAIL public release metadata: %s:%s (%s)\n' "$file" "$line" "$label" >&2
             failures=$((failures + 1))
         done <<<"$matches"
