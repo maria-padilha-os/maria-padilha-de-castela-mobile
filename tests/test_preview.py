@@ -168,6 +168,22 @@ class PreviewServer(unittest.TestCase):
                 self.assertEqual(status, 200, path)
                 self.assertIn(expected_type, content_type)
 
+    def test_dedicated_security_panel_route_is_served(self) -> None:
+        status, body, content_type = self.fetch("/preview/security/")
+        self.assertEqual(status, 200)
+        self.assertIn("text/html", content_type)
+        self.assertIn(b"Padilha Security Panel", body)
+        self.assertIn(b"Authorize lab mode", body)
+
+        for path in (
+            "/preview/security/security.css",
+            "/preview/security/security.js",
+            "/preview/security/security-panel.js",
+        ):
+            with self.subTest(path=path):
+                status, _body, _content_type = self.fetch(path)
+                self.assertEqual(status, 200, path)
+
     def test_root_redirects_to_preview_and_private_paths_are_denied(self) -> None:
         status, body, _content_type = self.fetch("/")
         self.assertEqual(status, 200)

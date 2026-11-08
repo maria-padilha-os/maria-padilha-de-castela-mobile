@@ -37,10 +37,10 @@
         </button>
 
         <div class="app-grid" aria-label="Applications">
-          <button class="app" type="button">
+          <a class="app" href="./security/" aria-label="Open the dedicated security panel">
             <span class="app-icon"><span class="icon icon-shield" aria-hidden="true"></span></span>
             <span class="app-label">Security</span>
-          </button>
+          </a>
           <button class="app" type="button">
             <span class="app-icon"><span class="icon icon-network" aria-hidden="true"></span></span>
             <span class="app-label">Network</span>
@@ -84,9 +84,9 @@
           <button class="app dock-app" type="button" aria-label="Search">
             <span class="app-icon"><span class="icon icon-search" aria-hidden="true"></span></span>
           </button>
-          <button class="app dock-app" type="button" aria-label="Security">
+          <a class="app dock-app" href="./security/" aria-label="Open the dedicated security panel">
             <span class="app-icon"><span class="icon icon-shield" aria-hidden="true"></span></span>
-          </button>
+          </a>
           <button class="app dock-app" type="button" aria-label="Apps">
             <span class="app-icon"><span class="icon icon-apps" aria-hidden="true"></span></span>
           </button>
@@ -171,6 +171,19 @@
           Minimum 4.5:1 for body text, 3:1 for borders. Status is always shown as
           an icon plus text, never by colour alone.
         </p>
+      </section>
+
+      <section class="control-group" aria-labelledby="security-panel-label">
+        <div class="section-heading">
+          <h2 id="security-panel-label">Security panel</h2>
+          <span class="summary-badge">Dedicated app surface</span>
+        </div>
+        <p class="hint">
+          Authorized lab mode, network inventory, capture review, permission
+          audit, and device integrity live on their own panel, not in general
+          settings. Every action is user-initiated.
+        </p>
+        <p><a class="text-button" href="./security/">Open the security panel</a></p>
       </section>
 
       <section class="control-group boundary-note" aria-labelledby="boundary-label">

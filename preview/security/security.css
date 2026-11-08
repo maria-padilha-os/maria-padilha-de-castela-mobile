@@ -1,0 +1,457 @@
+/* Dedicated Padilha security panel. Palette tokens come from ../styles.css. */
+
+.security-page {
+  background:
+    radial-gradient(
+      circle at 12% 8%,
+      color-mix(in srgb, var(--color-accent) 12%, transparent),
+      transparent 34rem
+    ),
+    var(--color-background);
+}
+
+.security-shell {
+  display: grid;
+  gap: 18px;
+  width: min(100%, 1040px);
+  margin: 0 auto;
+  padding: 28px 24px 48px;
+}
+
+.security-header {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.security-header h1 {
+  margin: 4px 0 8px;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 600;
+  line-height: 1.05;
+}
+
+.security-back {
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  text-decoration: none;
+}
+
+.lab-banner {
+  padding: 18px;
+  border: 1px solid var(--color-border);
+  border-inline-start: 5px solid var(--color-warning);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  box-shadow: var(--shadow);
+}
+
+.lab-banner[data-state="authorized"] {
+  border-inline-start-color: var(--color-accent-strong);
+}
+
+.lab-banner-heading {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.lab-banner-heading > .icon {
+  width: 28px;
+  height: 28px;
+  margin-top: 2px;
+  color: var(--color-warning);
+}
+
+.lab-banner[data-state="authorized"] .lab-banner-heading > .icon {
+  color: var(--color-accent-strong);
+}
+
+.lab-banner h2 {
+  margin: 0 0 4px;
+  font-size: 1.15rem;
+}
+
+.lab-status {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+}
+
+.lab-chip {
+  margin-inline-start: auto;
+  padding: 4px 11px;
+  border: 1px solid var(--color-warning);
+  border-radius: 999px;
+  color: var(--color-warning);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.lab-chip[data-state="authorized"] {
+  border-color: var(--color-success);
+  color: var(--color-success);
+}
+
+.lab-warning {
+  margin: 14px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  font-size: 0.86rem;
+}
+
+.lab-console {
+  padding: 18px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface-raised);
+}
+
+.acknowledgement {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  min-height: var(--touch);
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+}
+
+.acknowledgement input {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  margin: 2px 0 0;
+  accent-color: var(--color-accent);
+}
+
+.lab-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.primary-button,
+.secondary-button {
+  min-height: var(--touch);
+  padding: 0 18px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.primary-button {
+  border: 1px solid var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.secondary-button {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+}
+
+.primary-button:disabled,
+.secondary-button:disabled {
+  border-color: var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  cursor: not-allowed;
+  opacity: 0.78;
+}
+
+.session-note {
+  color: var(--color-text-secondary);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.lab-console .status-note {
+  margin-bottom: 0;
+}
+
+.panel-card {
+  padding: 18px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.panel-card .hint {
+  margin-top: 0;
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  margin: 16px 0;
+  padding: 5px;
+  border: 1px solid var(--color-border);
+  border-radius: 18px;
+  background: var(--color-background);
+}
+
+.tab {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--touch);
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 13px;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.tab .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.tab:hover {
+  color: var(--color-text-primary);
+}
+
+.tab.is-selected {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.tab-panel {
+  padding: 18px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface-raised);
+}
+
+.tab-panel[hidden] {
+  display: none;
+}
+
+.tab-panel-header h3 {
+  margin: 0 0 4px;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.tab-panel-header p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 0.88rem;
+}
+
+.capability-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: baseline;
+  margin: 14px 0;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
+}
+
+.capability-reason {
+  flex: 1 1 280px;
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 0.82rem;
+}
+
+.status-pending {
+  color: var(--color-text-secondary);
+}
+
+.scope-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.scope-grid > div {
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
+}
+
+.scope-grid p {
+  margin: 4px 0 0;
+  color: var(--color-text-secondary);
+  font-size: 0.84rem;
+}
+
+.scope-label {
+  color: var(--color-text-primary);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.capture-warning {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  margin: 12px 0;
+  padding: 11px 12px;
+  border-inline-start: 3px solid var(--color-warning);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-size: 0.84rem;
+}
+
+.capture-warning .icon {
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  color: var(--color-warning);
+}
+
+.file-field {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0;
+  color: var(--color-text-primary);
+  font-size: 0.86rem;
+  font-weight: 500;
+}
+
+.file-field input {
+  width: 100%;
+  min-height: var(--touch);
+  padding: 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font: inherit;
+  font-size: 0.84rem;
+}
+
+.file-field input:disabled {
+  color: var(--color-text-secondary);
+  cursor: not-allowed;
+}
+
+.empty-state {
+  margin: 12px 0;
+  padding: 14px;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-size: 0.86rem;
+}
+
+.tab-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.tab-panel .status-note {
+  margin-bottom: 0;
+}
+
+.tab-panel .status-note:empty {
+  display: none;
+}
+
+.boundary-note {
+  padding: 18px;
+  border: 1px solid var(--color-border);
+  border-inline-start: 5px solid var(--color-accent-strong);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.boundary-note h2 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+}
+
+.boundary-note .hint {
+  margin-bottom: 0;
+}
+
+.security-footer {
+  color: var(--color-text-secondary);
+  font-size: 0.78rem;
+}
+
+.security-footer p {
+  margin: 0 0 4px;
+}
+
+@media (max-width: 760px) {
+  .security-shell {
+    padding: 18px 14px 36px;
+  }
+
+  .security-header {
+    flex-direction: column;
+  }
+
+  .tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tab {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 520px) {
+  .security-shell {
+    padding: 12px 10px 28px;
+  }
+
+  .lab-banner,
+  .lab-console,
+  .panel-card,
+  .tab-panel,
+  .boundary-note {
+    padding: 14px;
+  }
+
+  .lab-banner-heading {
+    flex-wrap: wrap;
+  }
+
+  .lab-chip {
+    margin-inline-start: 0;
+  }
+
+  .scope-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tabs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .primary-button,
+  .secondary-button {
+    width: 100%;
+  }
+}

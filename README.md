@@ -54,7 +54,9 @@ and `preview/`:
 - a dynamic-accent resolver that rejects failing colours and falls back to the
   fixed Padilha palette when tokens are missing or partial;
 - an offline browser preview that runs on stock GrapheneOS before any system
-  partition is touched.
+  partition is touched;
+- a dedicated security-panel front-end with authorized lab mode, explicit
+  stop/clear, four inspection tabs, and graceful missing-tool states.
 
 The boot animation, system font, system UI, lock screen, and default-app
 preinstallation still require a system image and a new ADR. Verified boot,
@@ -69,6 +71,7 @@ signing, and security-critical UI are unchanged. See
 - [Padilha look-and-feel scope](docs/branding/padilha-look-and-feel.md)
 - [Overlay and system-build boundaries](docs/branding/overlay-and-build.md)
 - [Stock-device preview](docs/branding/preview.md)
+- [Security panel contract and safety boundaries](docs/security-panel.md)
 - [Asset provenance](docs/branding/asset-provenance.md)
 - [Machine-readable design tokens](docs/branding/tokens.json)
 
@@ -77,7 +80,8 @@ signing, and security-critical UI are unchanged. See
 - Padilha launcher with app drawer, local search, folders, widgets, work-profile
   support, and accessible light/dark themes
 - original wallpaper, palette, icon pack, and typography inside Castela apps
-- a dedicated local security panel with authorized lab mode
+- a dedicated local security panel with authorized lab mode (front-end
+  implemented in `preview/security/`; the signed app remains a build task)
 - local network inventory, pcap review, and permission/integrity audits
 - no automatic scanning, no hidden privileged service, no root, no telemetry
 - a setup companion that checks compatibility and links to the official

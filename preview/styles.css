@@ -283,6 +283,7 @@ button {
   border: 0;
   background: transparent;
   color: var(--color-text-primary);
+  text-decoration: none;
 }
 
 .app-icon {
@@ -522,6 +523,8 @@ input[type="color"] {
 }
 
 .text-button {
+  display: inline-grid;
+  place-items: center;
   min-height: var(--touch);
   padding: 0 14px;
   border: 1px solid var(--color-border);
@@ -529,6 +532,7 @@ input[type="color"] {
   background: var(--color-surface);
   color: var(--color-text-primary);
   font-weight: 500;
+  text-decoration: none;
 }
 
 .status-note {
