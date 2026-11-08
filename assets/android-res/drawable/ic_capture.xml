@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from assets/icons/ic_capture.svg by tools/svg_to_android_vector.py. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M4,12 a8,8 0 1,0 16,0 a8,8 0 1,0 -16,0 Z"
+        android:strokeColor="@color/padilha_icon"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="2" />
+    <path
+        android:fillColor="@color/padilha_icon"
+        android:pathData="M9.5,12 a2.5,2.5 0 1,0 5,0 a2.5,2.5 0 1,0 -5,0 Z"
+        android:strokeColor="@android:color/transparent"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="2" />
+</vector>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Reference runtime resource overlay for a Castela-owned app.
+
+  This is intentionally scoped to one Castela package. It must never target
+  android, com.android.systemui, the settings provider, the package installer,
+  or any other security-critical component. Installing it is a development or
+  signed-app-suite action; it does not modify a system partition and is not part
+  of the stock-device preview.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.castela.overlay.padilha_palette"
+    android:versionCode="1"
+    android:versionName="1.0.0">
+
+    <overlay
+        android:isStatic="false"
+        android:priority="1"
+        android:targetPackage="com.castela.mobile" />
+
+    <application
+        android:hasCode="false"
+        android:label="Padilha palette (Castela apps only)" />
+</manifest>

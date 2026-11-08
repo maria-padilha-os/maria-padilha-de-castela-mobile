@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Padilha dark theme; selected by the system night mode or the app override. -->
+<resources>
+    <style name="Theme.Castela.Padilha" parent="android:style/Theme.Material.NoActionBar">
+        <item name="padilhaBackground">@color/padilha_background</item>
+        <item name="padilhaSurface">@color/padilha_surface</item>
+        <item name="padilhaSurfaceRaised">@color/padilha_surface_raised</item>
+        <item name="padilhaScrim">@color/padilha_scrim</item>
+        <item name="padilhaTextPrimary">@color/padilha_text_primary</item>
+        <item name="padilhaTextSecondary">@color/padilha_text_secondary</item>
+        <item name="padilhaOnScrim">@color/padilha_on_scrim</item>
+        <item name="padilhaAccent">@color/padilha_accent</item>
+        <item name="padilhaAccentStrong">@color/padilha_accent_strong</item>
+        <item name="padilhaOnAccent">@color/padilha_on_accent</item>
+        <item name="padilhaOnAccentStrong">@color/padilha_on_accent_strong</item>
+        <item name="padilhaBorder">@color/padilha_border</item>
+        <item name="padilhaSuccess">@color/padilha_success</item>
+        <item name="padilhaWarning">@color/padilha_warning</item>
+        <item name="padilhaDanger">@color/padilha_danger</item>
+
+        <item name="android:windowBackground">@color/padilha_background</item>
+        <item name="android:colorBackground">@color/padilha_background</item>
+        <item name="android:colorBackgroundFloating">@color/padilha_surface_raised</item>
+        <item name="android:textColorPrimary">@color/padilha_text_primary</item>
+        <item name="android:textColorSecondary">@color/padilha_text_secondary</item>
+        <item name="android:colorAccent">@color/padilha_accent</item>
+        <item name="android:statusBarColor">@color/padilha_background</item>
+        <item name="android:navigationBarColor">@color/padilha_background</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+    </style>
+</resources>

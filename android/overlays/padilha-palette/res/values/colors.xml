@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Light Padilha palette for the Castela-owned target app. -->
+<resources>
+    <color name="padilha_background">#FBF5EC</color>
+    <color name="padilha_surface">#F3E8DA</color>
+    <color name="padilha_surface_raised">#FFFFFF</color>
+    <color name="padilha_scrim">#FBF5EC</color>
+    <color name="padilha_text_primary">#241A28</color>
+    <color name="padilha_text_secondary">#5A4A57</color>
+    <color name="padilha_on_scrim">#241A28</color>
+    <color name="padilha_accent">#7A2340</color>
+    <color name="padilha_accent_strong">#7A5A1E</color>
+    <color name="padilha_on_accent">#FFFFFF</color>
+    <color name="padilha_on_accent_strong">#FFFFFF</color>
+    <color name="padilha_border">#7A6355</color>
+    <color name="padilha_success">#2F6B4A</color>
+    <color name="padilha_warning">#7A4E00</color>
+    <color name="padilha_danger">#9B1C1C</color>
+</resources>

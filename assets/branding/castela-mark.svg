@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Castela Mobile mark">
+  <title>Castela Mobile mark</title>
+  <rect width="512" height="512" rx="112" fill="#241A28"/>
+  <g transform="scale(4.7407407)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M30,54 a24,24 0 1,0 48,0 a24,24 0 1,0 -48,0 Z" stroke="#F6EDE3" stroke-width="3"/>
+    <path d="M42,54 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0 Z" stroke="#E6B85C" stroke-width="3"/>
+    <path d="M54,38 L70,54 L54,70 L38,54 Z" stroke="#F6EDE3" stroke-width="3"/>
+    <path d="M54,26 C62,36 62,46 54,54 C46,46 46,36 54,26 Z" stroke="#E6B85C" stroke-width="2.5"/>
+    <path d="M54,26 C62,36 62,46 54,54 C46,46 46,36 54,26 Z" stroke="#E6B85C" stroke-width="2.5" transform="rotate(90 54 54)"/>
+    <path d="M54,26 C62,36 62,46 54,54 C46,46 46,36 54,26 Z" stroke="#E6B85C" stroke-width="2.5" transform="rotate(180 54 54)"/>
+    <path d="M54,26 C62,36 62,46 54,54 C46,46 46,36 54,26 Z" stroke="#E6B85C" stroke-width="2.5" transform="rotate(270 54 54)"/>
+    <path d="M49.5,54 a4.5,4.5 0 1,0 9,0 a4.5,4.5 0 1,0 -9,0 Z" fill="#E6B85C" stroke="none"/>
+  </g>
+</svg>

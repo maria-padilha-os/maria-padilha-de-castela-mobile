@@ -1,0 +1,24 @@
+{
+  "name": "Castela Mobile — Padilha preview",
+  "short_name": "Padilha preview",
+  "description": "Offline preview of the Padilha launcher design system on stock GrapheneOS.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#120C17",
+  "theme_color": "#120C17",
+  "icons": [
+    {
+      "src": "../assets/branding/castela-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "../assets/branding/castela-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

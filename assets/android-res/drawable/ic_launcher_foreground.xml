@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Padilha adaptive-icon foreground: an abstract lace rosette, not a religious
+  figure and not a GrapheneOS, Android, Google, or Pixel mark. The artwork stays
+  inside the 66 dp safe zone of the 108 dp canvas.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M30,54 a24,24 0 1,0 48,0 a24,24 0 1,0 -48,0 Z"
+        android:strokeColor="@color/padilha_launcher_foreground"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="3" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M42,54 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0 Z"
+        android:strokeColor="@color/padilha_launcher_accent"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="3" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M54,38 L70,54 L54,70 L38,54 Z"
+        android:strokeColor="@color/padilha_launcher_foreground"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="3" />
+
+    <group
+        android:pivotX="54"
+        android:pivotY="54"
+        android:rotation="0">
+        <path
+            android:fillColor="@android:color/transparent"
+            android:pathData="M54,26 C62,36 62,46 54,54 C46,46 46,36 54,26 Z"
+            android:strokeColor="@color/padilha_launcher_accent"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:strokeWidth="2.5" />
+    </group>
+    <group
+        android:pivotX="54"
+        android:pivotY="54"
+        android:rotation="90">
+        <path
+            android:fillColor="@android:color/transparent"
+            android:pathData="M54,26 C62,36 62,46 54,54 C46,46 46,36 54,26 Z"
+            android:strokeColor="@color/padilha_launcher_accent"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:strokeWidth="2.5" />
+    </group>
+    <group
+        android:pivotX="54"
+        android:pivotY="54"
+        android:rotation="180">
+        <path
+            android:fillColor="@android:color/transparent"
+            android:pathData="M54,26 C62,36 62,46 54,54 C46,46 46,36 54,26 Z"
+            android:strokeColor="@color/padilha_launcher_accent"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:strokeWidth="2.5" />
+    </group>
+    <group
+        android:pivotX="54"
+        android:pivotY="54"
+        android:rotation="270">
+        <path
+            android:fillColor="@android:color/transparent"
+            android:pathData="M54,26 C62,36 62,46 54,54 C46,46 46,36 54,26 Z"
+            android:strokeColor="@color/padilha_launcher_accent"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:strokeWidth="2.5" />
+    </group>
+
+    <path
+        android:fillColor="@color/padilha_launcher_accent"
+        android:pathData="M49.5,54 a4.5,4.5 0 1,0 9,0 a4.5,4.5 0 1,0 -9,0 Z"
+        android:strokeColor="@android:color/transparent"
+        android:strokeWidth="0" />
+</vector>

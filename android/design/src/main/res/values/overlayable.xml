@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Resources that a signed Padilha palette overlay may replace at runtime.
+  Only colour tokens are overlayable. Layouts, security UI, permissions, and
+  component declarations are deliberately excluded.
+-->
+<overlayable xmlns:android="http://schemas.android.com/apk/res/android" name="PadilhaPalette">
+    <policy type="public" />
+    <item type="color" name="padilha_background" />
+    <item type="color" name="padilha_surface" />
+    <item type="color" name="padilha_surface_raised" />
+    <item type="color" name="padilha_scrim" />
+    <item type="color" name="padilha_text_primary" />
+    <item type="color" name="padilha_text_secondary" />
+    <item type="color" name="padilha_on_scrim" />
+    <item type="color" name="padilha_accent" />
+    <item type="color" name="padilha_accent_strong" />
+    <item type="color" name="padilha_on_accent" />
+    <item type="color" name="padilha_on_accent_strong" />
+    <item type="color" name="padilha_border" />
+    <item type="color" name="padilha_success" />
+    <item type="color" name="padilha_warning" />
+    <item type="color" name="padilha_danger" />
+</overlayable>

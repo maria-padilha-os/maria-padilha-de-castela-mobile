@@ -19,8 +19,9 @@ GrapheneOS, rather than a full GrapheneOS fork and system-image build.
 - Reference device: **Pixel 9a (`tegu`)**, supported by GrapheneOS through
   April 2032.
 - First milestone: a private app suite, not a system image.
-- No ROM has been built. No device has been flashed. No artifact has been
-  released.
+- The Padilha design layer is implemented as Android resources, launcher assets,
+  and an offline stock-device preview. No ROM has been built. No device has been
+  flashed. No artifact has been released.
 
 A full fork is deferred and requires a new ADR. See the
 [revisit triggers](docs/adr/0001-grapheneos-base-device-support-and-padilha-branding.md#revisit-triggers).
@@ -40,11 +41,35 @@ A full fork is deferred and requires a new ADR. See the
 - The product is presented as "Castela Mobile, an independent project that runs
   on GrapheneOS." Do not use the GrapheneOS name or logo as product branding.
 
+## Padilha design-system implementation
+
+The app-layer design system now has concrete sources under `android/`, `assets/`,
+and `preview/`:
+
+- light and `values-night` colour resources, plus an optional runtime resource
+  overlay scoped to a Castela-owned package only;
+- original dark/light wallpapers, Fraunces and Inter font families, original
+  icons, adaptive/monochrome launcher layers, and a system-build-only boot
+  animation source;
+- a dynamic-accent resolver that rejects failing colours and falls back to the
+  fixed Padilha palette when tokens are missing or partial;
+- an offline browser preview that runs on stock GrapheneOS before any system
+  partition is touched.
+
+The boot animation, system font, system UI, lock screen, and default-app
+preinstallation still require a system image and a new ADR. Verified boot,
+signing, and security-critical UI are unchanged. See
+[overlay and build boundaries](docs/branding/overlay-and-build.md) and the
+[stock-device preview](docs/branding/preview.md).
+
 ## Documentation
 
 - [ADR 0001: GrapheneOS base, device support, and Padilha branding](docs/adr/0001-grapheneos-base-device-support-and-padilha-branding.md)
 - [Attribution, trademark, and redistribution rules](docs/legal/grapheneos-aosp-attribution.md)
 - [Padilha look-and-feel scope](docs/branding/padilha-look-and-feel.md)
+- [Overlay and system-build boundaries](docs/branding/overlay-and-build.md)
+- [Stock-device preview](docs/branding/preview.md)
+- [Asset provenance](docs/branding/asset-provenance.md)
 - [Machine-readable design tokens](docs/branding/tokens.json)
 
 ## Planned surface
@@ -58,9 +83,10 @@ A full fork is deferred and requires a new ADR. See the
 - a setup companion that checks compatibility and links to the official
   GrapheneOS installation and update documentation
 
-Out of scope for this phase: custom boot animation, system font replacement,
-system UI theming, preinstalled default apps, bootloader unlocking, ROM builds,
-and device flashing.
+Out of scope for this phase: installing or replacing the boot animation, system
+font replacement, system UI theming, preinstalled default apps, bootloader
+unlocking, ROM builds, and device flashing. The boot animation source in this
+repository is for a future system-image track only.
 
 ## Safety and privacy
 

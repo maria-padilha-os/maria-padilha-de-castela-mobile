@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#120C17">
+  <title>Castela Mobile — Padilha launcher preview</title>
+  <meta name="description" content="Offline Padilha design-system preview for stock GrapheneOS. No root, no system-partition changes, no telemetry.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="../assets/branding/castela-192.png" sizes="192x192" type="image/png">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body class="wallpaper-dark">
+  <a class="skip-link" href="#launcher">Skip to launcher preview</a>
+
+  <div class="preview-shell">
+    <main id="launcher" class="launcher" aria-label="Castela Mobile launcher preview">
+      <div class="status-bar" aria-hidden="true">
+        <span>9:41</span>
+        <span class="status-cluster">
+          <span class="status-pill">5G</span>
+          <span class="status-battery">82%</span>
+        </span>
+      </div>
+
+      <section class="home" aria-label="Home screen">
+        <div class="clock-block">
+          <p class="date-line" id="preview-date">Friday, 8 November</p>
+          <p class="clock" aria-label="9:41">9:41</p>
+          <p class="clock-note">Castela Mobile</p>
+        </div>
+
+        <button class="search" type="button" aria-label="Search apps">
+          <span class="icon icon-search" aria-hidden="true"></span>
+          <span>Search apps</span>
+        </button>
+
+        <div class="app-grid" aria-label="Applications">
+          <button class="app" type="button">
+            <span class="app-icon"><span class="icon icon-shield" aria-hidden="true"></span></span>
+            <span class="app-label">Security</span>
+          </button>
+          <button class="app" type="button">
+            <span class="app-icon"><span class="icon icon-network" aria-hidden="true"></span></span>
+            <span class="app-label">Network</span>
+          </button>
+          <button class="app" type="button">
+            <span class="app-icon"><span class="icon icon-capture" aria-hidden="true"></span></span>
+            <span class="app-label">Capture</span>
+          </button>
+          <button class="app" type="button">
+            <span class="app-icon"><span class="icon icon-folder" aria-hidden="true"></span></span>
+            <span class="app-label">Files</span>
+          </button>
+          <button class="app" type="button">
+            <span class="app-icon"><span class="icon icon-key" aria-hidden="true"></span></span>
+            <span class="app-label">Keys</span>
+          </button>
+          <button class="app" type="button">
+            <span class="app-icon"><span class="icon icon-settings" aria-hidden="true"></span></span>
+            <span class="app-label">Settings</span>
+          </button>
+          <button class="app" type="button">
+            <span class="app-icon"><span class="icon icon-wallpaper" aria-hidden="true"></span></span>
+            <span class="app-label">Wallpaper</span>
+          </button>
+          <button class="app" type="button">
+            <span class="app-icon"><span class="icon icon-palette" aria-hidden="true"></span></span>
+            <span class="app-label">Palette</span>
+          </button>
+        </div>
+
+        <div class="page-dots" aria-hidden="true">
+          <span class="dot is-active"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+
+        <nav class="dock" aria-label="Dock">
+          <button class="app dock-app" type="button" aria-label="Home">
+            <span class="app-icon"><span class="icon icon-home" aria-hidden="true"></span></span>
+          </button>
+          <button class="app dock-app" type="button" aria-label="Search">
+            <span class="app-icon"><span class="icon icon-search" aria-hidden="true"></span></span>
+          </button>
+          <button class="app dock-app" type="button" aria-label="Security">
+            <span class="app-icon"><span class="icon icon-shield" aria-hidden="true"></span></span>
+          </button>
+          <button class="app dock-app" type="button" aria-label="Apps">
+            <span class="app-icon"><span class="icon icon-apps" aria-hidden="true"></span></span>
+          </button>
+        </nav>
+      </section>
+    </main>
+
+    <aside class="controls" aria-labelledby="controls-title">
+      <header class="controls-header">
+        <p class="eyebrow">Stock-device preview</p>
+        <h1 id="controls-title">Padilha design system</h1>
+        <p class="lede">
+          Runs in the browser on stock GrapheneOS. It reads no system resources,
+          requests no permissions, and changes no partitions.
+        </p>
+      </header>
+
+      <section class="control-group" aria-labelledby="appearance-label">
+        <h2 id="appearance-label">Appearance</h2>
+        <fieldset class="segmented">
+          <legend class="sr-only">Theme</legend>
+          <label>
+            <input type="radio" name="theme" value="system" checked>
+            <span>System</span>
+          </label>
+          <label>
+            <input type="radio" name="theme" value="light">
+            <span>Light</span>
+          </label>
+          <label>
+            <input type="radio" name="theme" value="dark">
+            <span>Dark</span>
+          </label>
+        </fieldset>
+
+        <fieldset class="segmented">
+          <legend class="sr-only">Wallpaper</legend>
+          <label>
+            <input type="radio" name="wallpaper" value="dark" checked>
+            <span>Noite</span>
+          </label>
+          <label>
+            <input type="radio" name="wallpaper" value="light">
+            <span>Amanhecer</span>
+          </label>
+        </fieldset>
+      </section>
+
+      <section class="control-group" aria-labelledby="dynamic-label">
+        <h2 id="dynamic-label">Dynamic accent</h2>
+        <p class="hint">Optional. A failing accent is rejected, not forced.</p>
+        <div class="colour-row">
+          <label class="colour-picker" for="dynamic-accent">
+            <span class="icon icon-palette" aria-hidden="true"></span>
+            <span>Accent colour</span>
+          </label>
+          <input id="dynamic-accent" type="color" value="#7A2340">
+          <button id="reset-accent" class="text-button" type="button">Reset</button>
+        </div>
+        <p id="dynamic-status" class="status-note" role="status" aria-live="polite">
+          Fixed Padilha palette. No dynamic accent applied.
+        </p>
+      </section>
+
+      <section class="control-group" aria-labelledby="contrast-label">
+        <div class="section-heading">
+          <h2 id="contrast-label">Contrast report</h2>
+          <span id="contrast-summary" class="summary-badge">Checking…</span>
+        </div>
+        <table class="contrast-table">
+          <caption class="sr-only">Contrast ratios for the resolved Padilha palette</caption>
+          <thead>
+            <tr>
+              <th scope="col">Pair</th>
+              <th scope="col">Ratio</th>
+              <th scope="col">Result</th>
+            </tr>
+          </thead>
+          <tbody id="contrast-rows"></tbody>
+        </table>
+        <p class="hint">
+          Minimum 4.5:1 for body text, 3:1 for borders. Status is always shown as
+          an icon plus text, never by colour alone.
+        </p>
+      </section>
+
+      <section class="control-group boundary-note" aria-labelledby="boundary-label">
+        <h2 id="boundary-label">What this preview does not touch</h2>
+        <ul class="check-list">
+          <li><span class="icon icon-check" aria-hidden="true"></span>Verified boot, AVB, and signing keys</li>
+          <li><span class="icon icon-check" aria-hidden="true"></span>System UI, Settings, lock screen, and boot animation</li>
+          <li><span class="icon icon-check" aria-hidden="true"></span>System partitions, root, and privileged services</li>
+        </ul>
+        <p class="hint">
+          Boot animation, system fonts, and system UI require a future
+          system-image build. See <code>docs/branding/overlay-and-build.md</code>.
+        </p>
+      </section>
+
+      <footer class="preview-footer">
+        <p>Castela Mobile is an independent project that runs on GrapheneOS. Not official GrapheneOS.</p>
+        <p class="tiny">Offline preview · no telemetry · no network requests</p>
+      </footer>
+    </aside>
+  </div>
+
+  <noscript>
+    <p class="noscript">This preview needs JavaScript to switch the Padilha palette. The source tokens remain readable in <code>docs/branding/tokens.json</code>.</p>
+  </noscript>
+
+  <script src="./palette-data.js"></script>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

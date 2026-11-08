@@ -1,10 +1,11 @@
 # Padilha look-and-feel scope
 
-- **Status:** Design scope for the app-layer approach
+- **Status:** Design scope, with asset/resource implementation and a stock-device preview
 - **Date:** 2026-11-06
 - **Decision record:** [ADR 0001](../adr/0001-grapheneos-base-device-support-and-padilha-branding.md)
 - **Tokens:** [`tokens.json`](tokens.json)
 - **Legal rules:** [Attribution, trademark, and redistribution](../legal/grapheneos-aosp-attribution.md)
+- **Implementation:** [Overlay and system-build boundaries](overlay-and-build.md) · [Stock-device preview](preview.md)
 
 This document defines what "Padilha look and feel" means for Castela Mobile. It
 is intentionally a scope, not a finished visual identity: it fixes the surfaces,
@@ -106,6 +107,8 @@ current implementation targets.
 | `background` | `#120C17` | App and launcher background; not pure black |
 | `surface` | `#1D1424` | Cards, sheets, grouped rows |
 | `surfaceRaised` | `#2A1D33` | Menus, dialogs, elevated controls |
+| `scrim` | `#120C17` | Launcher label scrim over wallpaper |
+| `onScrim` | `#F6EDE3` | Text and icons on `scrim` |
 | `textPrimary` | `#F6EDE3` | Body and headings |
 | `textSecondary` | `#CDBFCB` | Supporting text, metadata |
 | `accent` | `#E58AA0` | Primary action, selected state, focus |
@@ -124,6 +127,8 @@ current implementation targets.
 | `background` | `#FBF5EC` | Warm cream background |
 | `surface` | `#F3E8DA` | Cards, sheets, grouped rows |
 | `surfaceRaised` | `#FFFFFF` | Menus, dialogs, elevated controls |
+| `scrim` | `#FBF5EC` | Launcher label scrim over wallpaper |
+| `onScrim` | `#241A28` | Text and icons on `scrim` |
 | `textPrimary` | `#241A28` | Body and headings |
 | `textSecondary` | `#5A4A57` | Supporting text, metadata |
 | `accent` | `#7A2340` | Primary action, selected state, focus |
@@ -144,6 +149,7 @@ The table is a sample; `tests/check_contrast.py` checks every pair in
 | --- | --- | --- | --- |
 | Body text on background | 16.63:1 | 15.46:1 | 4.5:1 |
 | Body text on surface | 15.40:1 | 13.85:1 | 4.5:1 |
+| Text on launcher scrim | 16.63:1 | 15.46:1 | 4.5:1 |
 | Secondary text on background | 10.92:1 | 7.59:1 | 4.5:1 |
 | Accent on background | 7.77:1 | 9.04:1 | 4.5:1 |
 | Text on accent | 6.76:1 | 9.80:1 | 4.5:1 |
@@ -164,7 +170,9 @@ The table is a sample; `tests/check_contrast.py` checks every pair in
   `#7A5A1E` in the light theme.
 - Dynamic colour (Material You) is optional. If enabled, it may tint the accent,
   but semantic colours, borders, and text must still be checked against the
-  actual background. The fixed Padilha palette is the default.
+  actual background. The fixed Padilha palette is the default. The executable
+  rule is `design/padilha_palette.py`; see
+  [Overlay and system-build boundaries](overlay-and-build.md#3-dynamic-lightdark-palette).
 - Disabled text is exempt from the 4.5:1 body requirement, but must still be
   distinguishable and must not carry essential information.
 
@@ -364,6 +372,9 @@ Rules:
   assets.
 
 ## 12. Acceptance checklist
+
+Design assets and the stock-device preview are implemented here; app-build and
+on-device items remain open until the launcher module exists.
 
 - [ ] `tokens.json` passes `tests/check_contrast.py`.
 - [ ] Dark and light wallpapers exist at the required sizes, with no text or

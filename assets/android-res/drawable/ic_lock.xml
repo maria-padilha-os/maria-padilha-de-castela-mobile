@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from assets/icons/ic_lock.svg by tools/svg_to_android_vector.py. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M7,10 h10 a2,2 0 0,1 2,2 v6 a2,2 0 0,1 -2,2 h-10 a2,2 0 0,1 -2,-2 v-6 a2,2 0 0,1 2,-2 Z"
+        android:strokeColor="@color/padilha_icon"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="2" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M8.5 10V7.5a3.5 3.5 0 0 1 7 0V10"
+        android:strokeColor="@color/padilha_icon"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="2" />
+</vector>

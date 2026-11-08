@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Padilha light palette. This is the default resource set, so a process that
+  cannot resolve a night resource still gets readable dark text on cream.
+
+  Do not add a literal text colour in a layout. Layouts must use these colour
+  resources or the matching Padilha theme attributes.
+-->
+<resources>
+    <color name="padilha_background">#FBF5EC</color>
+    <color name="padilha_surface">#F3E8DA</color>
+    <color name="padilha_surface_raised">#FFFFFF</color>
+    <color name="padilha_scrim">#FBF5EC</color>
+    <color name="padilha_text_primary">#241A28</color>
+    <color name="padilha_text_secondary">#5A4A57</color>
+    <color name="padilha_on_scrim">#241A28</color>
+    <color name="padilha_accent">#7A2340</color>
+    <color name="padilha_accent_strong">#7A5A1E</color>
+    <color name="padilha_on_accent">#FFFFFF</color>
+    <color name="padilha_on_accent_strong">#FFFFFF</color>
+    <color name="padilha_border">#7A6355</color>
+    <color name="padilha_success">#2F6B4A</color>
+    <color name="padilha_warning">#7A4E00</color>
+    <color name="padilha_danger">#9B1C1C</color>
+
+    <!-- Icons follow textPrimary; they are never a separate hardcoded white. -->
+    <color name="padilha_icon">@color/padilha_text_primary</color>
+
+    <!-- Launcher icon layers are intentionally theme-independent. -->
+    <color name="padilha_launcher_background">#241A28</color>
+    <color name="padilha_launcher_foreground">#F6EDE3</color>
+    <color name="padilha_launcher_accent">#E6B85C</color>
+</resources>

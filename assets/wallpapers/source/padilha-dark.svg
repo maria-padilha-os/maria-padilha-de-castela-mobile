@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="3120" viewBox="0 0 1440 3120" role="img" aria-label="Padilha dark wallpaper: abstract plum night with candle-gold lace">
+  <title>Noite de Padilha — dark</title>
+  <desc>Abstract plum night, candle-gold lace rosette, and a wine glow. No text, figures, or third-party marks.</desc>
+  <defs>
+    <linearGradient id="night" x1="0" y1="0" x2="0.85" y2="1">
+      <stop offset="0" stop-color="#0B0710"/>
+      <stop offset="0.38" stop-color="#1A1020"/>
+      <stop offset="0.72" stop-color="#160F1C"/>
+      <stop offset="1" stop-color="#120C17"/>
+    </linearGradient>
+    <radialGradient id="candle" cx="0.5" cy="0.31" r="0.52">
+      <stop offset="0" stop-color="#E6B85C" stop-opacity="0.20"/>
+      <stop offset="0.42" stop-color="#E58AA0" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#120C17" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="wine" cx="0.16" cy="0.82" r="0.55">
+      <stop offset="0" stop-color="#7A2340" stop-opacity="0.24"/>
+      <stop offset="1" stop-color="#120C17" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="vignette" cx="0.5" cy="0.42" r="0.78">
+      <stop offset="0.42" stop-color="#120C17" stop-opacity="0"/>
+      <stop offset="0.82" stop-color="#0B0710" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#0B0710" stop-opacity="0.70"/>
+    </radialGradient>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="14"/>
+    </filter>
+  </defs>
+
+  <rect width="1440" height="3120" fill="url(#night)"/>
+  <rect width="1440" height="3120" fill="url(#candle)"/>
+  <rect width="1440" height="3120" fill="url(#wine)"/>
+
+  <!-- Soft lace shadow behind the focal rosette. -->
+  <g opacity="0.30" filter="url(#soft)" stroke="#E58AA0" fill="none">
+    <circle cx="720" cy="980" r="318" stroke-width="26"/>
+    <circle cx="720" cy="980" r="190" stroke-width="18"/>
+  </g>
+
+  <!-- Outer lace rings. -->
+  <g fill="none" stroke="#E6B85C" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="720" cy="980" r="292" stroke-width="2.5" stroke-opacity="0.42"/>
+    <circle cx="720" cy="980" r="268" stroke-width="4" stroke-opacity="0.30" stroke-dasharray="2 16"/>
+    <circle cx="720" cy="980" r="214" stroke-width="2" stroke-opacity="0.46"/>
+    <circle cx="720" cy="980" r="190" stroke-width="3" stroke-opacity="0.28" stroke-dasharray="3 11"/>
+    <circle cx="720" cy="980" r="132" stroke-width="2" stroke-opacity="0.50"/>
+  </g>
+
+  <!-- Radial embroidery spokes. -->
+  <g fill="none" stroke="#E58AA0" stroke-linecap="round" stroke-opacity="0.34" stroke-width="2">
+    <path d="M720,688 V788"/>
+    <path d="M720,1172 V1272"/>
+    <path d="M428,980 H528"/>
+    <path d="M912,980 H1012"/>
+    <path d="M514,774 L578,838"/>
+    <path d="M862,1122 L926,1186"/>
+    <path d="M514,1186 L578,1122"/>
+    <path d="M862,838 L926,774"/>
+  </g>
+
+  <!-- Four lace petals. -->
+  <g fill="none" stroke="#E6B85C" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" stroke-opacity="0.48">
+    <path d="M720,716 C790,822 790,900 720,980 C650,900 650,822 720,716 Z"/>
+    <path d="M720,716 C790,822 790,900 720,980 C650,900 650,822 720,716 Z" transform="rotate(90 720 980)"/>
+    <path d="M720,716 C790,822 790,900 720,980 C650,900 650,822 720,716 Z" transform="rotate(180 720 980)"/>
+    <path d="M720,716 C790,822 790,900 720,980 C650,900 650,822 720,716 Z" transform="rotate(270 720 980)"/>
+  </g>
+
+  <!-- Inner diamond and candle point. -->
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M720,864 L836,980 L720,1096 L604,980 Z" stroke="#E58AA0" stroke-width="3" stroke-opacity="0.55"/>
+    <path d="M720,906 L794,980 L720,1054 L646,980 Z" stroke="#E6B85C" stroke-width="2" stroke-opacity="0.48"/>
+    <circle cx="720" cy="980" r="38" stroke="#E6B85C" stroke-width="2" stroke-opacity="0.55"/>
+    <circle cx="720" cy="980" r="8" fill="#E6B85C" fill-opacity="0.85" stroke="none"/>
+  </g>
+
+  <!-- Sparse lower lace, kept low-frequency for dock/gesture legibility. -->
+  <g fill="none" stroke="#8C7594" stroke-linecap="round" stroke-opacity="0.22" stroke-width="2">
+    <path d="M96,2460 C300,2380 480,2550 720,2470 C960,2390 1140,2560 1344,2470"/>
+    <path d="M96,2530 C300,2450 480,2620 720,2540 C960,2460 1140,2630 1344,2540"/>
+    <path d="M220,2690 C380,2620 520,2740 720,2670 C920,2600 1060,2720 1220,2650"/>
+    <path d="M220,2750 C380,2680 520,2800 720,2730 C920,2660 1060,2780 1220,2710"/>
+  </g>
+
+  <!-- Upper corner marks: abstract embroidery, no text or logos. -->
+  <g fill="none" stroke="#E6B85C" stroke-linecap="round" stroke-opacity="0.20" stroke-width="2">
+    <path d="M96,180 C170,180 210,220 210,294"/>
+    <path d="M96,230 C146,230 160,244 160,294"/>
+    <path d="M1344,180 C1270,180 1230,220 1230,294"/>
+    <path d="M1344,230 C1294,230 1280,244 1280,294"/>
+  </g>
+
+  <rect width="1440" height="3120" fill="url(#vignette)"/>
+</svg>

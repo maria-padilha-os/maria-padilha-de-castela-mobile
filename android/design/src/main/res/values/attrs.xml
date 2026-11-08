@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Semantic theme attributes for Castela apps and the launcher. -->
+<resources>
+    <attr name="padilhaBackground" format="color" />
+    <attr name="padilhaSurface" format="color" />
+    <attr name="padilhaSurfaceRaised" format="color" />
+    <attr name="padilhaScrim" format="color" />
+    <attr name="padilhaTextPrimary" format="color" />
+    <attr name="padilhaTextSecondary" format="color" />
+    <attr name="padilhaOnScrim" format="color" />
+    <attr name="padilhaAccent" format="color" />
+    <attr name="padilhaAccentStrong" format="color" />
+    <attr name="padilhaOnAccent" format="color" />
+    <attr name="padilhaOnAccentStrong" format="color" />
+    <attr name="padilhaBorder" format="color" />
+    <attr name="padilhaSuccess" format="color" />
+    <attr name="padilhaWarning" format="color" />
+    <attr name="padilhaDanger" format="color" />
+</resources>

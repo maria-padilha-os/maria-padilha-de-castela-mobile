@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="3120" viewBox="0 0 1440 3120" role="img" aria-label="Padilha boot-animation source keyframe 001">
+  <title>Padilha boot source 001</title>
+  <desc>System-build source only. No text, logos, flashing, or audio.</desc>
+  <defs>
+    <linearGradient id="night" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#0B0710"/>
+      <stop offset="0.55" stop-color="#1A1020"/>
+      <stop offset="1" stop-color="#120C17"/>
+    </linearGradient>
+    <radialGradient id="candle" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#E6B85C" stop-opacity="0.525"/>
+      <stop offset="0.55" stop-color="#E58AA0" stop-opacity="0.184"/>
+      <stop offset="1" stop-color="#120C17" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1440" height="3120" fill="url(#night)"/>
+  <circle cx="720" cy="1560" r="520" fill="url(#candle)"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="720" cy="1560" r="230.0" stroke="#E6B85C" stroke-opacity="0.310" stroke-width="3"/>
+    <circle cx="720" cy="1560" r="165.6" stroke="#E58AA0" stroke-opacity="0.248" stroke-width="2" stroke-dasharray="2 14"/>
+    <circle cx="720" cy="1560" r="105.8" stroke="#E6B85C" stroke-opacity="0.341" stroke-width="2"/>
+    <path d="M720,1394.4 C770.6,1500 770.6,1620 720,1725.6 C669.4,1620 669.4,1500 720,1394.4 Z"
+      stroke="#E6B85C" stroke-opacity="0.279" stroke-width="2.5"/>
+    <path d="M720,1394.4 C770.6,1500 770.6,1620 720,1725.6 C669.4,1620 669.4,1500 720,1394.4 Z"
+      stroke="#E6B85C" stroke-opacity="0.279" stroke-width="2.5" transform="rotate(90 720 1560)"/>
+    <circle cx="720" cy="1560" r="13.0" fill="#E6B85C" fill-opacity="0.525" stroke="none"/>
+  </g>
+</svg>

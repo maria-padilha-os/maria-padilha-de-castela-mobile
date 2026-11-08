@@ -22,9 +22,30 @@ for path in \
   docs/adr/0001-grapheneos-base-device-support-and-padilha-branding.md \
   docs/legal/grapheneos-aosp-attribution.md \
   docs/branding/padilha-look-and-feel.md \
+  docs/branding/overlay-and-build.md \
+  docs/branding/preview.md \
+  docs/branding/asset-provenance.md \
   docs/branding/tokens.json \
+  design/padilha_palette.py \
+  preview/index.html \
+  preview/styles.css \
+  preview/palette.js \
+  preview/app.js \
+  preview/palette-data.js \
+  preview/serve.py \
+  android/design/src/main/res/values/colors.xml \
+  android/design/src/main/res/values-night/colors.xml \
+  android/overlays/padilha-palette/AndroidManifest.xml \
+  android/system/bootanimation/desc.txt \
+  assets/wallpapers/padilha-dark-1440x3120.webp \
+  assets/fonts/Inter-Regular.woff2 \
+  assets/icons/ic_home.svg \
   tests/check_docs.py \
-  tests/check_contrast.py; do
+  tests/check_contrast.py \
+  tests/test_assets.py \
+  tests/test_palette_fallback.py \
+  tests/test_light_surface_text.py \
+  tests/test_preview.py; do
   require_file "$path"
 done
 
@@ -38,6 +59,23 @@ if python3 tests/check_contrast.py; then
   ok "contrast checks"
 else
   bad "contrast checks"
+fi
+
+for generator in \
+  "python3 tools/export_preview_tokens.py --check" \
+  "python3 tools/svg_to_android_vector.py --check" \
+  "python3 tools/make_boot_keyframes.py --check"; do
+  if $generator >/dev/null; then
+    ok "$generator"
+  else
+    bad "$generator"
+  fi
+done
+
+if python3 -m unittest discover -s tests -t . -p 'test_*.py' -v; then
+  ok "design-system unit tests"
+else
+  bad "design-system unit tests"
 fi
 
 scan_file=$(mktemp)
