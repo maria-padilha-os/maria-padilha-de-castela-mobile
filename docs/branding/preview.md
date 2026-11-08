@@ -56,6 +56,7 @@ process, network request, or telemetry is included.
 | Dynamic accent | A candidate accent is accepted only if accent-on-background, accent-on-surface, accent-on-raised-surface, and text-on-accent all pass 4.5:1 |
 | Contrast report | Live ratios for body text, secondary text, accent, status colours, and borders |
 | Fallback message | Dynamic accent rejection, partial-token fallback, or missing-palette fallback |
+| Security panel | A dedicated route at `preview/security/` with authorized lab mode, stop/clear, four inspection tabs, and missing-tool states |
 
 The launcher mock puts clock, search, app labels, and dock content on Padilha
 surface tokens instead of relying on the wallpaper. That is deliberate: a busy
@@ -67,7 +68,11 @@ The preview does **not** show or change:
   shade, Quick Settings, or default apps;
 - verified boot, AVB, app signing, the package installer, permissions, or the
   security panel's trusted UI;
+- the security panel's activation state or session data;
 - any file outside this checkout.
+
+The dedicated security panel is documented separately in
+[`docs/security-panel.md`](../security-panel.md).
 
 ## 3. Offline and private by design
 

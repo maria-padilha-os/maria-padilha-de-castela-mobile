@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#120C17">
+  <title>Castela Mobile — Padilha security panel</title>
+  <meta name="description" content="Dedicated offline security panel for Castela Mobile. Authorized lab mode, user-initiated inspection, no root, no background service, no telemetry.">
+  <link rel="icon" href="../../assets/branding/castela-192.png" sizes="192x192" type="image/png">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="./security.css">
+</head>
+<body class="security-page">
+  <a class="skip-link" href="#security-main">Skip to security panel</a>
+
+  <main id="security-main" class="security-shell" data-panel-id="com.castela.security">
+    <header class="security-header">
+      <div>
+        <p class="eyebrow">Castela Mobile · exclusive front-end</p>
+        <h1>Padilha Security Panel</h1>
+        <p class="lede">
+          A dedicated local panel, separate from general settings. It is an
+          ordinary Android app: no root, no kernel or baseband visibility, no
+          background scanning, no hidden service, and no telemetry.
+        </p>
+      </div>
+      <a class="text-button security-back" href="../">Back to launcher</a>
+    </header>
+
+    <section
+      id="lab-banner"
+      class="lab-banner"
+      data-state="locked"
+      role="region"
+      aria-labelledby="lab-title"
+    >
+      <div class="lab-banner-heading">
+        <span class="icon icon-warning" aria-hidden="true"></span>
+        <div>
+          <h2 id="lab-title">Lab mode is locked</h2>
+          <p id="lab-status" class="lab-status">
+            Nothing is scanned automatically. Inspection starts only after you
+            authorize lab mode and press a tab's own action.
+          </p>
+        </div>
+        <span id="lab-chip" class="lab-chip" data-state="locked">Locked</span>
+      </div>
+      <p class="lab-warning">
+        <strong>Authorized use only.</strong> Capture or inspect only networks
+        and devices you own or have written permission to test. Packet captures
+        may contain personal data; keep them local and delete them when done.
+      </p>
+    </section>
+
+    <section class="lab-console" aria-labelledby="lab-console-title">
+      <h2 id="lab-console-title" class="sr-only">Authorized lab mode</h2>
+      <label class="acknowledgement" for="lab-ack">
+        <input id="lab-ack" type="checkbox">
+        <span>
+          I confirm that I own the network or have permission to inspect it, and
+          that I will handle any capture data lawfully and locally.
+        </span>
+      </label>
+      <div class="lab-actions">
+        <button id="authorize-lab" class="primary-button" type="button" disabled>
+          Authorize lab mode
+        </button>
+        <button id="stop-clear" class="secondary-button" type="button" disabled>
+          Stop and clear
+        </button>
+        <span id="lab-session" class="session-note">No active session</span>
+      </div>
+      <p id="lab-feedback" class="status-note" role="status" aria-live="polite">
+        Lab mode is locked. No collection, capture, or audit is running.
+      </p>
+    </section>
+
+    <section class="panel-card" aria-labelledby="tabs-title">
+      <div class="section-heading">
+        <h2 id="tabs-title">Inspection tabs</h2>
+        <span id="capability-summary" class="summary-badge">Checking capabilities…</span>
+      </div>
+      <p class="hint">
+        Each tab reports its own missing-tool state. A missing tool is not an
+        error and never falls back to a privileged substitute.
+      </p>
+
+      <div class="tabs" role="tablist" aria-label="Security panel tabs">
+        <button
+          id="tab-network"
+          class="tab is-selected"
+          type="button"
+          role="tab"
+          aria-selected="true"
+          aria-controls="panel-network"
+          data-tab="network"
+          tabindex="0"
+        >
+          <span class="icon icon-network" aria-hidden="true"></span>
+          <span>Network inventory</span>
+        </button>
+        <button
+          id="tab-capture"
+          class="tab"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panel-capture"
+          data-tab="capture"
+          tabindex="-1"
+        >
+          <span class="icon icon-capture" aria-hidden="true"></span>
+          <span>Capture review</span>
+        </button>
+        <button
+          id="tab-permissions"
+          class="tab"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panel-permissions"
+          data-tab="permissions"
+          tabindex="-1"
+        >
+          <span class="icon icon-key" aria-hidden="true"></span>
+          <span>Permission audit</span>
+        </button>
+        <button
+          id="tab-integrity"
+          class="tab"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panel-integrity"
+          data-tab="integrity"
+          tabindex="-1"
+        >
+          <span class="icon icon-shield" aria-hidden="true"></span>
+          <span>Device integrity</span>
+        </button>
+      </div>
+
+      <section
+        id="panel-network"
+        class="tab-panel"
+        role="tabpanel"
+        aria-labelledby="tab-network"
+        data-tab-panel="network"
+      >
+        <header class="tab-panel-header">
+          <h3>Network inventory</h3>
+          <p>What a normal app can see on this device, without snooping.</p>
+        </header>
+        <div class="capability-line">
+          <span class="status status-pending" data-capability-status="network">Checking…</span>
+          <p id="capability-network" data-capability-reason="network" class="capability-reason"></p>
+        </div>
+        <div class="scope-grid" aria-label="Network visibility scope">
+          <div>
+            <span class="scope-label">Visible</span>
+            <p>Local interfaces, addresses, link state, and DNS settings.</p>
+          </div>
+          <div>
+            <span class="scope-label">Not visible</span>
+            <p>Other apps' traffic, kernel sockets, raw packets, or baseband data.</p>
+          </div>
+        </div>
+        <p class="empty-state" data-empty-state="network">
+          No inventory has run. Starting it is an explicit, foreground action.
+        </p>
+        <div class="tab-actions">
+          <button class="primary-button" type="button" data-run-tab="network" disabled>
+            Start local inventory
+          </button>
+        </div>
+        <p class="status-note" data-run-feedback="network" role="status" aria-live="polite"></p>
+      </section>
+
+      <section
+        id="panel-capture"
+        class="tab-panel"
+        role="tabpanel"
+        aria-labelledby="tab-capture"
+        data-tab-panel="capture"
+        hidden
+      >
+        <header class="tab-panel-header">
+          <h3>Capture review</h3>
+          <p>Read-only review of a capture file you choose. Nothing is uploaded.</p>
+        </header>
+        <div class="capability-line">
+          <span class="status status-pending" data-capability-status="capture">Checking…</span>
+          <p id="capability-capture" data-capability-reason="capture" class="capability-reason"></p>
+        </div>
+        <p class="capture-warning">
+          <span class="icon icon-warning" aria-hidden="true"></span>
+          <span>Captures can contain credentials and third-party communications.
+          Keep them app-private and use Stop and clear when finished.</span>
+        </p>
+        <label class="file-field" for="capture-file">
+          <span>User-selected capture file</span>
+          <input
+            id="capture-file"
+            type="file"
+            accept=".pcap,.pcapng,application/vnd.tcpdump.pcap"
+            disabled
+          >
+        </label>
+        <p id="capture-selection" class="empty-state" data-empty-state="capture">
+          No capture selected. The panel never opens a file automatically.
+        </p>
+        <div class="tab-actions">
+          <button class="primary-button" type="button" data-run-tab="capture" disabled>
+            Review selected capture
+          </button>
+        </div>
+        <p class="status-note" data-run-feedback="capture" role="status" aria-live="polite"></p>
+      </section>
+
+      <section
+        id="panel-permissions"
+        class="tab-panel"
+        role="tabpanel"
+        aria-labelledby="tab-permissions"
+        data-tab-panel="permissions"
+        hidden
+      >
+        <header class="tab-panel-header">
+          <h3>Permission audit</h3>
+          <p>Review what the app can see, and what the user has granted.</p>
+        </header>
+        <div class="capability-line">
+          <span class="status status-pending" data-capability-status="permissions">Checking…</span>
+          <p id="capability-permissions" data-capability-reason="permissions" class="capability-reason"></p>
+        </div>
+        <div class="scope-grid" aria-label="Permission audit scope">
+          <div>
+            <span class="scope-label">Visible</span>
+            <p>App-visible permission state and explicitly granted usage access.</p>
+          </div>
+          <div>
+            <span class="scope-label">Not visible</span>
+            <p>Other users, hidden system packages, or privileged policy state.</p>
+          </div>
+        </div>
+        <p class="empty-state" data-empty-state="permissions">
+          No permission audit has run. Access is requested at the moment of use,
+          never in the background.
+        </p>
+        <div class="tab-actions">
+          <button class="primary-button" type="button" data-run-tab="permissions" disabled>
+            Run permission audit
+          </button>
+        </div>
+        <p class="status-note" data-run-feedback="permissions" role="status" aria-live="polite"></p>
+      </section>
+
+      <section
+        id="panel-integrity"
+        class="tab-panel"
+        role="tabpanel"
+        aria-labelledby="tab-integrity"
+        data-tab-panel="integrity"
+        hidden
+      >
+        <header class="tab-panel-header">
+          <h3>Device integrity</h3>
+          <p>Honest app-level facts, without implying OS or hardware attestation.</p>
+        </header>
+        <div class="capability-line">
+          <span class="status status-pending" data-capability-status="integrity">Checking…</span>
+          <p id="capability-integrity" data-capability-reason="integrity" class="capability-reason"></p>
+        </div>
+        <div class="scope-grid" aria-label="Device integrity scope">
+          <div>
+            <span class="scope-label">Visible</span>
+            <p>App signer and configuration facts available to an ordinary app.</p>
+          </div>
+          <div>
+            <span class="scope-label">Not visible</span>
+            <p>Verified-boot state, baseband details, or kernel-level attestation.</p>
+          </div>
+        </div>
+        <p class="empty-state" data-empty-state="integrity">
+          No integrity check has run. This panel never claims to replace the
+          operating system's verified boot or GrapheneOS attestation.
+        </p>
+        <div class="tab-actions">
+          <button class="primary-button" type="button" data-run-tab="integrity" disabled>
+            Run integrity check
+          </button>
+        </div>
+        <p class="status-note" data-run-feedback="integrity" role="status" aria-live="polite"></p>
+      </section>
+    </section>
+
+    <section class="boundary-note" aria-labelledby="boundary-title">
+      <h2 id="boundary-title">Boundaries this panel keeps</h2>
+      <ul class="check-list">
+        <li><span class="icon icon-check" aria-hidden="true"></span>No automatic scan, background timer, worker, or hidden service</li>
+        <li><span class="icon icon-check" aria-hidden="true"></span>No root, raw sockets, privileged permissions, or kernel claims</li>
+        <li><span class="icon icon-check" aria-hidden="true"></span>No upload, telemetry, or remote font, image, or script</li>
+        <li><span class="icon icon-check" aria-hidden="true"></span>Stop and clear revokes the session and removes session results</li>
+      </ul>
+      <p class="hint">
+        This is a front-end contract on stock GrapheneOS. A future signed app
+        build must use public Android APIs and keep the same separation from
+        general settings. See <code>docs/security-panel.md</code>.
+      </p>
+    </section>
+
+    <footer class="security-footer">
+      <p>Castela Mobile is an independent project that runs on GrapheneOS. Not official GrapheneOS.</p>
+      <p class="tiny">Offline security front-end · no telemetry · no network requests</p>
+    </footer>
+  </main>
+
+  <noscript>
+    <p class="noscript">
+      This security panel needs JavaScript for its local tab and lab-mode state.
+      No inspection runs without explicit user action, and this page makes no
+      network requests. The contract is documented in
+      <code>docs/security-panel.md</code>.
+    </p>
+  </noscript>
+
+  <script type="module" src="./security.js"></script>
+</body>
+</html>
