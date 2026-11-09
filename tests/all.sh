@@ -27,6 +27,7 @@ for path in \
   docs/branding/asset-provenance.md \
   docs/branding/tokens.json \
   docs/security-panel.md \
+  docs/local-network-inventory.md \
   design/padilha_palette.py \
   preview/index.html \
   preview/styles.css \
@@ -38,6 +39,8 @@ for path in \
   preview/security/security.css \
   preview/security/security.js \
   preview/security/security-panel.js \
+  preview/security/network-inventory.js \
+  tools/network_inventory_helper.py \
   android/design/src/main/res/values/colors.xml \
   android/design/src/main/res/values-night/colors.xml \
   android/overlays/padilha-palette/AndroidManifest.xml \
@@ -51,7 +54,8 @@ for path in \
   tests/test_palette_fallback.py \
   tests/test_light_surface_text.py \
   tests/test_preview.py \
-  tests/test_security_panel.py; do
+  tests/test_security_panel.py \
+  tests/test_network_inventory.py; do
   require_file "$path"
 done
 

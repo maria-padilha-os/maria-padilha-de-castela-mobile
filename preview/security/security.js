@@ -11,16 +11,48 @@ import {
   createSecurityPanel,
   registerSecurityPanel,
 } from "./security-panel.js";
+import {
+  AUTHORIZATION_STATEMENT,
+  createNetworkInventory,
+  validateTarget,
+} from "./network-inventory.js";
 
 const registry = createPanelRegistry();
 const definition = registerSecurityPanel(registry);
+const networkProvider =
+  globalThis.CASTELA_NETWORK_PROVIDER &&
+  typeof globalThis.CASTELA_NETWORK_PROVIDER === "object"
+    ? globalThis.CASTELA_NETWORK_PROVIDER
+    : null;
+const inventory = createNetworkInventory({ provider: networkProvider });
+const inventoryReady = inventory.hasProvider();
+
 const tools =
   globalThis.CASTELA_SECURITY_TOOLS &&
   typeof globalThis.CASTELA_SECURITY_TOOLS === "object"
     ? globalThis.CASTELA_SECURITY_TOOLS
     : {};
 
-const panel = createSecurityPanel({ definition, probe: tools });
+const probe = { ...tools };
+if (inventoryReady) {
+  probe.networkInventory = () => ({
+    available: true,
+    tool: inventory.getProviderStatus().label,
+  });
+} else if (networkProvider) {
+  probe.networkInventory = () => ({
+    available: false,
+    reason: inventory.getProviderStatus().message,
+    rejected: "provider-rejected",
+  });
+}
+
+const actions = {};
+if (inventoryReady) {
+  actions.network = () => inventory.scan(inventoryTarget?.value ?? "");
+}
+
+const panel = createSecurityPanel({ definition, probe, actions });
 
 const banner = document.querySelector("#lab-banner");
 const labTitle = document.querySelector("#lab-title");
@@ -33,6 +65,12 @@ const sessionNote = document.querySelector("#lab-session");
 const labFeedback = document.querySelector("#lab-feedback");
 const capabilitySummary = document.querySelector("#capability-summary");
 const captureFile = document.querySelector("#capture-file");
+const inventoryTarget = document.querySelector("#inventory-target");
+const inventoryTargetStatus = document.querySelector("#inventory-target-status");
+const inventoryResults = document.querySelector("#inventory-results");
+const inventorySummary = document.querySelector("#inventory-summary");
+const inventoryRows = document.querySelector("#inventory-rows");
+const inventoryNote = document.querySelector("#inventory-note");
 const tabList = document.querySelector('[role="tablist"]');
 const tabButtons = Array.from(document.querySelectorAll("[data-tab]"));
 const runButtons = Array.from(document.querySelectorAll("[data-run-tab]"));
@@ -42,6 +80,10 @@ let feedback = {
   message: "Lab mode is locked. No collection, capture, or audit is running.",
   kind: null,
 };
+
+if (acknowledgement) {
+  acknowledgement.title = AUTHORIZATION_STATEMENT;
+}
 
 function setFeedback(message, kind = null) {
   feedback = { message, kind };
@@ -66,6 +108,115 @@ function formatBytes(size) {
     unit = units[index];
   }
   return `${value.toFixed(1)} ${unit}`;
+}
+
+function renderTargetStatus() {
+  if (!inventoryTargetStatus || !inventoryTarget) {
+    return;
+  }
+
+  const value = inventoryTarget.value.trim();
+  inventoryTargetStatus.classList.remove("is-accepted", "is-rejected");
+
+  if (!value) {
+    inventoryTargetStatus.textContent = inventoryReady
+      ? "Choose a private or link-local range. Nothing runs automatically."
+      : "No local provider is installed. Range validation works here, but discovery is disabled.";
+    return;
+  }
+
+  const result = validateTarget(value);
+  if (!result.ok) {
+    inventoryTargetStatus.textContent = result.message;
+    inventoryTargetStatus.classList.add("is-rejected");
+    return;
+  }
+
+  inventoryTargetStatus.textContent = inventoryReady
+    ? `Validated ${result.target.scope} ${result.target.canonical}: ${result.target.addressCountText}.`
+    : `Validated ${result.target.scope} ${result.target.canonical}, but no local provider is installed, so discovery stays disabled.`;
+  inventoryTargetStatus.classList.add("is-accepted");
+}
+
+function renderInventory(snapshot) {
+  if (
+    !inventoryResults ||
+    !inventoryRows ||
+    !inventorySummary ||
+    !inventoryNote
+  ) {
+    return;
+  }
+
+  const result = snapshot.results.network;
+  const data = result?.status === "complete" ? result.data : null;
+  const current = validateTarget(inventoryTarget?.value ?? "");
+
+  if (
+    !data ||
+    data.ok !== true ||
+    !current.ok ||
+    current.target.canonical !== data.target.canonical
+  ) {
+    inventoryResults.hidden = true;
+    inventoryRows.replaceChildren();
+    inventoryNote.textContent = "";
+    return;
+  }
+
+  inventoryResults.hidden = false;
+  inventorySummary.textContent = `${data.hosts.length} host${
+    data.hosts.length === 1 ? "" : "s"
+  }`;
+  inventoryRows.replaceChildren();
+
+  if (data.hosts.length === 0) {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+    cell.colSpan = 3;
+    cell.textContent = `No devices were returned for ${data.target.canonical}.`;
+    row.append(cell);
+    inventoryRows.append(row);
+  } else {
+    for (const host of data.hosts) {
+      const row = document.createElement("tr");
+
+      const hostCell = document.createElement("td");
+      hostCell.textContent = host.host;
+
+      const addressCell = document.createElement("td");
+      addressCell.textContent = host.address;
+
+      const serviceCell = document.createElement("td");
+      if (host.services.length === 0) {
+        serviceCell.textContent = "No service hints observed";
+      } else {
+        serviceCell.textContent = host.services
+          .map(
+            (service) =>
+              `${service.hint} (${service.protocol}/${service.port})`,
+          )
+          .join(", ");
+      }
+
+      row.append(hostCell, addressCell, serviceCell);
+      inventoryRows.append(row);
+    }
+  }
+
+  const notes = [`Range ${data.target.canonical} (${data.target.scope}).`];
+  if (data.truncated) {
+    notes.push("Results were truncated at the local limit.");
+  }
+  if (Number(data.ignored) > 0) {
+    notes.push(
+      `${data.ignored} provider entr${
+        data.ignored === 1 ? "y was" : "ies were"
+      } ignored because it was invalid, public, or outside the range.`,
+    );
+  }
+  notes.push("No port scan, exploit, or credential capture ran.");
+  inventoryNote.textContent = notes.join(" ");
 }
 
 function renderCapabilityStatus(tab, capability) {
@@ -96,6 +247,18 @@ function renderEmptyState(tab, capability, snapshot) {
 
   const result = snapshot.results[tab.id];
   if (result?.status === "complete") {
+    if (tab.id === "network" && result.data?.ok === false) {
+      empty.textContent = result.data.message;
+      return;
+    }
+    if (tab.id === "network" && result.data?.ok === true) {
+      const count = result.data.hosts.length;
+      empty.textContent =
+        count === 0
+          ? `Inventory completed for ${result.data.target.canonical}: no devices were returned.`
+          : `${count} device${count === 1 ? "" : "s"} listed below for ${result.data.target.canonical}. Review the data, then stop and clear when finished.`;
+      return;
+    }
     empty.textContent = `${tab.label} completed locally in session ${snapshot.session?.id ?? "unknown"}. Review the data below, then stop and clear when finished.`;
     return;
   }
@@ -110,6 +273,12 @@ function renderEmptyState(tab, capability, snapshot) {
   if (!snapshot.authorized) {
     empty.textContent =
       "The local tool is ready, but lab mode is locked. Authorize lab mode before starting.";
+    return;
+  }
+  if (tab.id === "network") {
+    empty.textContent = inventoryTarget?.value.trim()
+      ? "No inventory has run for this range. Starting it is an explicit, foreground action."
+      : "Enter a private or link-local range, then start the local inventory.";
     return;
   }
   if (tab.id === "capture" && selectedCapture) {
@@ -220,6 +389,8 @@ function render() {
 
   renderLabMode(snapshot);
   renderTabs(snapshot);
+  renderTargetStatus();
+  renderInventory(snapshot);
 
   for (const tab of snapshot.tabs) {
     const capability = tab.capability;
@@ -260,9 +431,12 @@ function authorizeLabMode() {
   if (!result.ok) {
     setFeedback(result.message, "rejected");
   } else {
+    const inventoryResult = inventory.authorize({ acknowledged: true });
     setFeedback(
-      `Lab mode authorized in session ${result.state.session.id}. Nothing has run yet.`,
-      "accepted",
+      inventoryResult.ok
+        ? `Lab mode authorized in session ${result.state.session.id}. Nothing has run yet.`
+        : inventoryResult.message,
+      inventoryResult.ok ? "accepted" : "rejected",
     );
   }
   render();
@@ -270,17 +444,25 @@ function authorizeLabMode() {
 
 function stopAndClear() {
   const result = panel.stopAndClear();
+  inventory.stopAndClear();
   selectedCapture = null;
   if (captureFile) {
     captureFile.value = "";
+  }
+  if (inventoryTarget) {
+    inventoryTarget.value = "";
+  }
+  if (inventoryTargetStatus) {
+    inventoryTargetStatus.textContent = "";
+    inventoryTargetStatus.classList.remove("is-accepted", "is-rejected");
   }
   if (acknowledgement) {
     acknowledgement.checked = false;
   }
   setFeedback(
     result.wasAuthorized
-      ? "Lab mode stopped. Session results and the selected capture were cleared."
-      : "Lab mode is already locked; session results and the selected capture were cleared.",
+      ? "Lab mode stopped. Session results, the selected capture, and inventory results were cleared."
+      : "Lab mode is already locked; session results, the selected capture, and inventory results were cleared.",
     "accepted",
   );
   render();
@@ -293,7 +475,22 @@ function runTab(tabId) {
   }
   const result = panel.run(tabId);
   if (result.ok) {
-    setFeedback(`${tab.label} completed locally.`, "accepted");
+    if (tabId === "network" && result.data?.ok === false) {
+      setFeedback(
+        result.data.message || "The range was refused safely.",
+        "rejected",
+      );
+    } else if (tabId === "network" && result.data?.ok === true) {
+      const count = result.data.hosts.length;
+      setFeedback(
+        `Local inventory complete: ${count} host${
+          count === 1 ? "" : "s"
+        } in ${result.data.target.canonical}.`,
+        "accepted",
+      );
+    } else {
+      setFeedback(`${tab.label} completed locally.`, "accepted");
+    }
   } else {
     setFeedback(result.message || "The action was refused safely.", "rejected");
   }
@@ -363,6 +560,10 @@ captureFile?.addEventListener("change", () => {
       : "Capture selection cleared.",
     null,
   );
+  render();
+});
+
+inventoryTarget?.addEventListener("input", () => {
   render();
 });
 

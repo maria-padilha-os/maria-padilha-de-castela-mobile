@@ -30,9 +30,9 @@ export const PANEL_TABS = Object.freeze([
     actionLabel: "Start local inventory",
     missingTitle: "No local network-inventory provider",
     missingDetail:
-      "No inventory provider is installed. This panel does not scan, open raw sockets, or request privileged network access.",
+      "No inventory provider is installed. Inject an Android-safe or explicit Termux/native provider; this panel does not scan, open raw sockets, or request privileged network access.",
     scope:
-      "Local interfaces, addresses, link state, and DNS settings visible to a normal app. Not other apps' traffic, kernel sockets, or baseband data.",
+      "Hosts, addresses, and service hints from a local provider, limited to validated private/link-local ranges. Not other apps' traffic, kernel sockets, or baseband data.",
   }),
   Object.freeze({
     id: "capture",

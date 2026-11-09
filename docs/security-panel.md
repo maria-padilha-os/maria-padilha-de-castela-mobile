@@ -69,7 +69,7 @@ is attempted.
 
 | Tab | Capability | Visible to the panel | Not available to the panel |
 | --- | --- | --- | --- |
-| Network inventory | `networkInventory` | Local interfaces, addresses, link state, DNS settings | Other apps' traffic, kernel sockets, raw packets, baseband |
+| Network inventory | `networkInventory` | Hosts, addresses, and service hints from a validated private/link-local provider | Other apps' traffic, kernel sockets, raw packets, credentials, baseband |
 | Capture review | `captureReview` | A file the user explicitly chooses, reviewed offline | Automatic capture, remote upload, hidden capture service |
 | Permission audit | `permissionAudit` | App-visible permission state and explicitly granted usage access | Other users, hidden system packages, privileged policy state |
 | Device integrity | `deviceIntegrity` | App signer and configuration facts an ordinary app can read | Verified-boot state, baseband details, kernel attestation |
@@ -79,6 +79,11 @@ A missing capability result includes `available: false`, a `reason`, and
 `privileged: true` is rejected as `rejected: "privileged-provider"`. A probe
 that throws is caught and reported as `rejected: "probe-failed"`; it never
 breaks the panel.
+
+The network tab is implemented by the
+[local-network inventory extension](local-network-inventory.md). It validates a
+private/link-local target before calling a provider, requires the lab-mode
+acknowledgement, and rejects public ranges outright.
 
 ## 4. No automatic or hidden work
 
@@ -97,6 +102,9 @@ exists. It does not inspect the network, files, permissions, or device state.
 
 - Captures and inventory results stay in memory for the active session and are
   cleared by **Stop and clear**.
+- The inventory keeps only host, address, and service-hint fields. It discards
+  password, credential, token, banner, and similar provider fields, and it never
+  probes a service or captures credentials.
 - The preview reads a selected file's name and size only. It does not read file
   contents.
 - Packet captures may contain personal data. A visible warning appears in the
@@ -158,7 +166,10 @@ The preview is HTML/CSS/JavaScript because this repository does not contain a
 Gradle project or Android SDK. A future signed APK must preserve the same
 contract using public Android APIs:
 
-- `ConnectivityManager`/`LinkProperties` for app-visible network facts;
+- `ConnectivityManager`/`LinkProperties` and `NsdManager` for app-visible
+  network facts and local service advertisements;
+- an explicit Termux/native neighbor-cache helper only when the user installs
+  and starts it, with the app validating its output again;
 - `VpnService` only for a user-started capture, with a persistent notification
   and a stop control;
 - Storage Access Framework for user-selected capture files;
@@ -178,7 +189,9 @@ decision under ADR 0001's revisit triggers, not a change to this panel.
 
 - This is a front-end contract and offline preview, not a signed Android app or
   a claim that a device has been instrumented.
-- The preview has no real network inventory, capture parser, permission source,
-  or integrity verifier; those appear as explicit missing-tool states.
+- The preview has no built-in live network inventory, capture parser, permission
+  source, or integrity verifier. The network tab stays in a missing-provider
+  state until an explicit provider is injected; fixture providers are used only
+  in tests and offline previews.
 - GrapheneOS remains responsible for verified boot, OS updates, and system
   security. The panel does not change them.

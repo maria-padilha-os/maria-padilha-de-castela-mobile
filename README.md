@@ -56,7 +56,10 @@ and `preview/`:
 - an offline browser preview that runs on stock GrapheneOS before any system
   partition is touched;
 - a dedicated security-panel front-end with authorized lab mode, explicit
-  stop/clear, four inspection tabs, and graceful missing-tool states.
+  stop/clear, four inspection tabs, and graceful missing-tool states;
+- a local-network inventory extension with private/link-local range validation,
+  explicit ownership confirmation, provider-based discovery, and fixture-tested
+  host/address/service-hint display.
 
 The boot animation, system font, system UI, lock screen, and default-app
 preinstallation still require a system image and a new ADR. Verified boot,
@@ -72,6 +75,7 @@ signing, and security-critical UI are unchanged. See
 - [Overlay and system-build boundaries](docs/branding/overlay-and-build.md)
 - [Stock-device preview](docs/branding/preview.md)
 - [Security panel contract and safety boundaries](docs/security-panel.md)
+- [Local-network inventory contract, ranges, and helper](docs/local-network-inventory.md)
 - [Asset provenance](docs/branding/asset-provenance.md)
 - [Machine-readable design tokens](docs/branding/tokens.json)
 
@@ -82,7 +86,9 @@ signing, and security-critical UI are unchanged. See
 - original wallpaper, palette, icon pack, and typography inside Castela apps
 - a dedicated local security panel with authorized lab mode (front-end
   implemented in `preview/security/`; the signed app remains a build task)
-- local network inventory, pcap review, and permission/integrity audits
+- local network inventory with private/link-local range validation and an
+  explicit Termux/native helper (front-end contract implemented; pcap review and
+  permission/integrity audits remain planned)
 - no automatic scanning, no hidden privileged service, no root, no telemetry
 - a setup companion that checks compatibility and links to the official
   GrapheneOS installation and update documentation
@@ -101,7 +107,10 @@ and release artifacts remain private. Do not claim this is official GrapheneOS.
 The security panel is an ordinary app. It does not provide kernel, baseband, or
 privileged visibility, and it must not claim to. Packet captures may contain
 personal data: capture only on networks you own or are authorized to test, keep
-data local, and delete it when finished.
+data local, and delete it when finished. The local-network inventory accepts
+only private/link-local ranges, requires an explicit ownership confirmation
+before any provider runs, and never probes ports, exploits services, or captures
+credentials.
 
 ## License
 

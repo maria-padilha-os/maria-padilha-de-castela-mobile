@@ -179,6 +179,7 @@ class PreviewServer(unittest.TestCase):
             "/preview/security/security.css",
             "/preview/security/security.js",
             "/preview/security/security-panel.js",
+            "/preview/security/network-inventory.js",
         ):
             with self.subTest(path=path):
                 status, _body, _content_type = self.fetch(path)

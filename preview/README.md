@@ -21,6 +21,16 @@ It is a separate surface from the launcher and general settings: lab mode starts
 locked, every action is user-initiated, and missing local tools render as
 explicit unavailable states. See [`docs/security-panel.md`](../docs/security-panel.md).
 
+The **Network inventory** tab uses the
+[local-network inventory contract](../docs/local-network-inventory.md). It
+accepts only validated private/link-local ranges and requires the ownership
+acknowledgement before a provider runs. A provider is injected through
+`globalThis.CASTELA_NETWORK_PROVIDER`; without one the tab stays in a
+missing-provider state. The explicit
+[Termux/native helper](../tools/network_inventory_helper.py) can read a neighbor
+cache that the user supplies. Tests use fixture data only and never scan a live
+network.
+
 This directory is static and offline: no build step, no package manager, no
 network calls, no telemetry. `palette-data.js` is generated from
 `docs/branding/tokens.json`:
@@ -32,7 +42,10 @@ python3 tools/export_preview_tokens.py
 Do not edit `palette-data.js` by hand.
 
 The security panel's pure registration/state contract lives in
-`security/security-panel.js`; `security/security.js` only binds it to the page.
-There are no timers, workers, network calls, or automatic scans. Optional local
-tool probes can be injected through `globalThis.CASTELA_SECURITY_TOOLS` during
-development; without an adapter every tab shows a graceful missing-tool state.
+`security/security-panel.js`, and the inventory contract lives in
+`security/network-inventory.js`; `security/security.js` only binds them to the
+page. There are no timers, workers, network calls, or automatic scans. Optional
+local tool probes can be injected through `globalThis.CASTELA_SECURITY_TOOLS`
+and an explicit inventory provider through
+`globalThis.CASTELA_NETWORK_PROVIDER` during development; without adapters every
+tab shows a graceful missing-tool state.

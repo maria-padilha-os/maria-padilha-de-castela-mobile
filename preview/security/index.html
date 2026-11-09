@@ -58,8 +58,9 @@
       <label class="acknowledgement" for="lab-ack">
         <input id="lab-ack" type="checkbox">
         <span>
-          I confirm that I own the network or have permission to inspect it, and
-          that I will handle any capture data lawfully and locally.
+          I own or am authorized to test this network, and I will inspect only
+          devices I am permitted to test. I will handle any capture data
+          lawfully and locally.
         </span>
       </label>
       <div class="lab-actions">
@@ -150,21 +151,44 @@
       >
         <header class="tab-panel-header">
           <h3>Network inventory</h3>
-          <p>What a normal app can see on this device, without snooping.</p>
+          <p>
+            Hosts, addresses, and service hints from an explicit local provider.
+            No sweeping, port probing, or credential capture.
+          </p>
         </header>
         <div class="capability-line">
           <span class="status status-pending" data-capability-status="network">Checking…</span>
           <p id="capability-network" data-capability-reason="network" class="capability-reason"></p>
         </div>
-        <div class="scope-grid" aria-label="Network visibility scope">
+        <div class="scope-grid" aria-label="Network inventory scope">
           <div>
             <span class="scope-label">Visible</span>
-            <p>Local interfaces, addresses, link state, and DNS settings.</p>
+            <p>Private/link-local hosts, addresses, and service hints from the provider.</p>
           </div>
           <div>
             <span class="scope-label">Not visible</span>
-            <p>Other apps' traffic, kernel sockets, raw packets, or baseband data.</p>
+            <p>Other apps' traffic, kernel sockets, raw packets, credentials, or baseband data.</p>
           </div>
+        </div>
+        <div class="inventory-target">
+          <label class="file-field" for="inventory-target">
+            <span>Local range to inventory</span>
+            <input
+              id="inventory-target"
+              type="text"
+              inputmode="text"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="192.168.1.0/24"
+              aria-describedby="inventory-target-hint inventory-target-status"
+            >
+          </label>
+          <p id="inventory-target-hint" class="hint">
+            IPv4 private/link-local or IPv6 ULA/link-local only. Public ranges
+            are refused before a provider runs. IPv4 targets are capped at 1024
+            addresses; IPv6 uses the neighbor table, not a sweep.
+          </p>
+          <p id="inventory-target-status" class="status-note" role="status" aria-live="polite"></p>
         </div>
         <p class="empty-state" data-empty-state="network">
           No inventory has run. Starting it is an explicit, foreground action.
@@ -175,6 +199,31 @@
           </button>
         </div>
         <p class="status-note" data-run-feedback="network" role="status" aria-live="polite"></p>
+        <div id="inventory-results" class="inventory-results" hidden>
+          <div class="section-heading">
+            <h4>Discovered hosts</h4>
+            <span id="inventory-summary" class="summary-badge">0 hosts</span>
+          </div>
+          <div class="inventory-table-wrap">
+            <table class="inventory-table">
+              <caption class="sr-only">Local network inventory results</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Host</th>
+                  <th scope="col">Address</th>
+                  <th scope="col">Service hints</th>
+                </tr>
+              </thead>
+              <tbody id="inventory-rows"></tbody>
+            </table>
+          </div>
+          <p id="inventory-note" class="hint"></p>
+        </div>
+        <p class="hint" id="inventory-safety-note">
+          Service hints come only from provider observations. The tool does not
+          probe ports, grab banners, brute-force, exploit, or capture
+          credentials. Results stay in memory and are removed by Stop and clear.
+        </p>
       </section>
 
       <section

@@ -57,6 +57,7 @@ process, network request, or telemetry is included.
 | Contrast report | Live ratios for body text, secondary text, accent, status colours, and borders |
 | Fallback message | Dynamic accent rejection, partial-token fallback, or missing-palette fallback |
 | Security panel | A dedicated route at `preview/security/` with authorized lab mode, stop/clear, four inspection tabs, and missing-tool states |
+| Network inventory | Private/link-local range validation, explicit ownership confirmation, provider-based host/address/service-hint display, and public-range refusal |
 
 The launcher mock puts clock, search, app labels, and dock content on Padilha
 surface tokens instead of relying on the wallpaper. That is deliberate: a busy
@@ -72,7 +73,9 @@ The preview does **not** show or change:
 - any file outside this checkout.
 
 The dedicated security panel is documented separately in
-[`docs/security-panel.md`](../security-panel.md).
+[`docs/security-panel.md`](../security-panel.md). The inventory extension and its
+explicit Termux/native helper are documented in
+[`docs/local-network-inventory.md`](../local-network-inventory.md).
 
 ## 3. Offline and private by design
 
