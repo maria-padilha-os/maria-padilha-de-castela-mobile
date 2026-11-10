@@ -58,6 +58,7 @@ process, network request, or telemetry is included.
 | Fallback message | Dynamic accent rejection, partial-token fallback, or missing-palette fallback |
 | Security panel | A dedicated route at `preview/security/` with authorized lab mode, stop/clear, four inspection tabs, and missing-tool states |
 | Network inventory | Private/link-local range validation, explicit ownership confirmation, provider-based host/address/service-hint display, and public-range refusal |
+| Pcap capture/review | Offline pcap/pcapng summaries from a user-selected file, sensitive-payload warnings, and a live-capture contract that requires a user-started provider and a persistent indicator |
 
 The launcher mock puts clock, search, app labels, and dock content on Padilha
 surface tokens instead of relying on the wallpaper. That is deliberate: a busy
@@ -75,7 +76,10 @@ The preview does **not** show or change:
 The dedicated security panel is documented separately in
 [`docs/security-panel.md`](../security-panel.md). The inventory extension and its
 explicit Termux/native helper are documented in
-[`docs/local-network-inventory.md`](../local-network-inventory.md).
+[`docs/local-network-inventory.md`](../local-network-inventory.md). The pcap
+capture/review extension, its non-root review helper, and its live-capture
+provider boundary are documented in
+[`docs/pcap-capture-review.md`](../pcap-capture-review.md).
 
 ## 3. Offline and private by design
 
@@ -83,7 +87,9 @@ explicit Termux/native helper are documented in
 - All icon, font, and wallpaper URLs are relative local paths.
 - The preview never writes to the device or the checkout.
 - The server binds to `127.0.0.1` by default.
-- No Android permission, `VpnService`, root, or privileged command is used.
+- No Android permission, root, or privileged command is used. The preview never
+  starts a `VpnService`; live capture exists only as an explicit provider
+  contract for a future signed build, and it never starts on first launch.
 
 ## 4. Test the preview and assets
 

@@ -16,6 +16,11 @@ import {
   createNetworkInventory,
   validateTarget,
 } from "./network-inventory.js";
+import {
+  CAPTURE_CONSENT_STATEMENT,
+  MAX_REVIEW_BYTES,
+  createPcapCapture,
+} from "./pcap-capture.js";
 
 const registry = createPanelRegistry();
 const definition = registerSecurityPanel(registry);
@@ -26,6 +31,12 @@ const networkProvider =
     : null;
 const inventory = createNetworkInventory({ provider: networkProvider });
 const inventoryReady = inventory.hasProvider();
+const captureProvider =
+  globalThis.CASTELA_CAPTURE_PROVIDER &&
+  typeof globalThis.CASTELA_CAPTURE_PROVIDER === "object"
+    ? globalThis.CASTELA_CAPTURE_PROVIDER
+    : null;
+const capture = createPcapCapture({ provider: captureProvider });
 
 const tools =
   globalThis.CASTELA_SECURITY_TOOLS &&
@@ -47,10 +58,35 @@ if (inventoryReady) {
   });
 }
 
+// The offline pcap parser is built in, so capture review never depends on an
+// installed tool. Live capture still requires an explicit local provider.
+probe.captureReview = () => ({
+  available: true,
+  tool: "local-pcap-parser",
+  version: "1.0",
+});
+
+let selectedCapture = null;
+let pendingReviewBytes = null;
+
 const actions = {};
 if (inventoryReady) {
   actions.network = () => inventory.scan(inventoryTarget?.value ?? "");
 }
+actions.capture = () => {
+  if (!selectedCapture) {
+    throw new Error("Choose a capture file before reviewing it.");
+  }
+  if (!pendingReviewBytes) {
+    throw new Error("Read the selected capture before reviewing it.");
+  }
+  const result = capture.reviewCapture(pendingReviewBytes, {
+    fileName: selectedCapture.name,
+    size: selectedCapture.size,
+  });
+  pendingReviewBytes = null;
+  return result;
+};
 
 const panel = createSecurityPanel({ definition, probe, actions });
 
@@ -65,6 +101,22 @@ const sessionNote = document.querySelector("#lab-session");
 const labFeedback = document.querySelector("#lab-feedback");
 const capabilitySummary = document.querySelector("#capability-summary");
 const captureFile = document.querySelector("#capture-file");
+const captureConsent = document.querySelector("#capture-consent");
+const captureStartButton = document.querySelector("#capture-start");
+const captureStopButton = document.querySelector("#capture-stop");
+const captureClearButton = document.querySelector("#capture-clear");
+const captureProviderStatus = document.querySelector("#capture-provider-status");
+const captureProviderReason = document.querySelector("#capture-provider-reason");
+const captureIndicator = document.querySelector("#capture-indicator");
+const captureIndicatorLabel = document.querySelector("#capture-indicator-label");
+const captureIndicatorDetail = document.querySelector("#capture-indicator-detail");
+const captureIndicatorStop = document.querySelector("#capture-indicator-stop");
+const captureSummary = document.querySelector("#capture-summary");
+const captureSummaryBadge = document.querySelector("#capture-summary-badge");
+const captureStats = document.querySelector("#capture-stats");
+const captureWarnings = document.querySelector("#capture-warnings");
+const captureConversationRows = document.querySelector("#capture-conversation-rows");
+const captureSummaryNote = document.querySelector("#capture-summary-note");
 const inventoryTarget = document.querySelector("#inventory-target");
 const inventoryTargetStatus = document.querySelector("#inventory-target-status");
 const inventoryResults = document.querySelector("#inventory-results");
@@ -75,7 +127,6 @@ const tabList = document.querySelector('[role="tablist"]');
 const tabButtons = Array.from(document.querySelectorAll("[data-tab]"));
 const runButtons = Array.from(document.querySelectorAll("[data-run-tab]"));
 
-let selectedCapture = null;
 let feedback = {
   message: "Lab mode is locked. No collection, capture, or audit is running.",
   kind: null,
@@ -219,6 +270,231 @@ function renderInventory(snapshot) {
   inventoryNote.textContent = notes.join(" ");
 }
 
+function formatTimestamp(seconds) {
+  if (!Number.isFinite(seconds)) {
+    return "unavailable";
+  }
+  try {
+    return new Date(seconds * 1000).toISOString();
+  } catch {
+    return String(seconds);
+  }
+}
+
+function endpointText(address, port) {
+  if (port === null || port === undefined) {
+    return address;
+  }
+  return address.includes(":") ? `[${address}]:${port}` : `${address}:${port}`;
+}
+
+function addCaptureStat(label, value) {
+  if (!captureStats) {
+    return;
+  }
+  const term = document.createElement("dt");
+  term.textContent = label;
+  const description = document.createElement("dd");
+  description.textContent = value;
+  captureStats.append(term, description);
+}
+
+function renderCapture(snapshot) {
+  const state = capture.snapshot();
+  const provider = state.providerStatus;
+
+  if (captureIndicator) {
+    captureIndicator.hidden = !state.indicator.visible;
+    if (captureIndicatorLabel) {
+      captureIndicatorLabel.textContent = state.indicator.label;
+    }
+    if (captureIndicatorDetail) {
+      captureIndicatorDetail.textContent = state.indicator.detail;
+    }
+    if (captureIndicatorStop) {
+      captureIndicatorStop.disabled = state.state !== "capturing";
+    }
+  }
+
+  if (captureProviderStatus) {
+    captureProviderStatus.textContent = provider.ok
+      ? "Live capture ready"
+      : "Live capture unavailable";
+    captureProviderStatus.classList.toggle("is-rejected", !provider.ok);
+  }
+  if (captureProviderReason) {
+    captureProviderReason.textContent = provider.ok
+      ? `${state.provider.label} is configured. Nothing starts until lab mode is authorized, capture consent is checked, and you press Start capture.`
+      : `${provider.message} Offline review still works on a user-selected file.`;
+  }
+
+  if (captureConsent) {
+    captureConsent.disabled =
+      !snapshot.authorized || state.state === "capturing";
+  }
+  if (captureStartButton) {
+    captureStartButton.disabled =
+      !snapshot.authorized ||
+      !state.authorized ||
+      !provider.ok ||
+      !captureConsent?.checked ||
+      state.state === "capturing";
+    captureStartButton.title = provider.ok
+      ? "Start a user-authorized live capture with a persistent indicator."
+      : provider.message;
+  }
+  if (captureStopButton) {
+    captureStopButton.disabled = state.state !== "capturing";
+  }
+  if (captureClearButton) {
+    captureClearButton.disabled =
+      !state.canClear || state.state === "capturing";
+    captureClearButton.title =
+      state.state === "capturing"
+        ? "Stop the live capture before clearing capture files."
+        : state.canClear
+          ? "Delete captured files through the local capture provider."
+          : "No capture provider with a verified clear function is configured.";
+  }
+
+  if (!captureSummary) {
+    return;
+  }
+
+  const review = state.review;
+  if (!review) {
+    captureSummary.hidden = true;
+    captureStats?.replaceChildren();
+    captureWarnings?.replaceChildren();
+    captureConversationRows?.replaceChildren();
+    if (captureSummaryNote) {
+      captureSummaryNote.textContent = "";
+    }
+    return;
+  }
+
+  const summary = review.summary;
+  captureSummary.hidden = false;
+  if (captureSummaryBadge) {
+    captureSummaryBadge.textContent = `${summary.packetCount} packet${
+      summary.packetCount === 1 ? "" : "s"
+    } · ${formatBytes(summary.capturedBytes)}`;
+  }
+
+  captureStats?.replaceChildren();
+  addCaptureStat("File", review.fileName);
+  addCaptureStat("Size", `${formatBytes(review.size)} (${review.size} bytes)`);
+  addCaptureStat(
+    "Format",
+    `${summary.format.name} ${summary.format.version ?? ""} · ${
+      summary.format.byteOrder
+    }-endian · link type ${summary.format.linkType ?? "unknown"}`,
+  );
+  addCaptureStat("Packets", String(summary.packetCount));
+  addCaptureStat(
+    "Captured / original bytes",
+    `${summary.capturedBytes} / ${summary.originalBytes}`,
+  );
+  addCaptureStat(
+    "Time range",
+    summary.firstTimestamp !== null && summary.lastTimestamp !== null
+      ? `${formatTimestamp(summary.firstTimestamp)} → ${formatTimestamp(
+          summary.lastTimestamp,
+        )} (${Number(summary.durationSeconds ?? 0).toFixed(3)} s)`
+      : "Timestamps unavailable",
+  );
+  const protocolText =
+    Object.entries(summary.protocols)
+      .filter(([, count]) => count > 0)
+      .map(([name, count]) => `${name} ${count}`)
+      .join(", ") || "none decoded";
+  addCaptureStat("Protocols", protocolText);
+  addCaptureStat(
+    "Payload",
+    summary.payload.packets > 0
+      ? `${summary.payload.packets} packet${
+          summary.payload.packets === 1 ? "" : "s"
+        }, ${formatBytes(summary.payload.bytes)} (contents not displayed)`
+      : "No payload bytes observed",
+  );
+  addCaptureStat(
+    "Sensitivity",
+    summary.sensitive.hasPayload
+      ? "High: payloads may contain credentials or personal data"
+      : "Treat as sensitive metadata",
+  );
+
+  captureWarnings?.replaceChildren();
+  for (const warning of summary.warnings) {
+    const line = document.createElement("p");
+    line.className = "capture-warning-line";
+    if (warning.code === "sensitive-payload" || warning.code === "plaintext-service") {
+      line.classList.add("is-sensitive");
+    }
+    line.textContent = warning.message;
+    captureWarnings?.append(line);
+  }
+
+  captureConversationRows?.replaceChildren();
+  if (summary.conversations.length === 0) {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+    cell.colSpan = 4;
+    cell.textContent = "No decodable TCP, UDP, or ICMP conversations.";
+    row.append(cell);
+    captureConversationRows?.append(row);
+  } else {
+    for (const conversation of summary.conversations) {
+      const row = document.createElement("tr");
+
+      const protocolCell = document.createElement("td");
+      protocolCell.textContent = conversation.protocol.toUpperCase();
+
+      const sourceCell = document.createElement("td");
+      sourceCell.textContent = endpointText(
+        conversation.source,
+        conversation.sourcePort,
+      );
+
+      const destinationCell = document.createElement("td");
+      destinationCell.textContent = endpointText(
+        conversation.destination,
+        conversation.destinationPort,
+      );
+
+      const packetsCell = document.createElement("td");
+      packetsCell.textContent = `${conversation.packets} / ${formatBytes(
+        conversation.bytes,
+      )}`;
+
+      row.append(protocolCell, sourceCell, destinationCell, packetsCell);
+      captureConversationRows?.append(row);
+    }
+  }
+
+  const endpoints = summary.endpoints
+    .slice(0, 5)
+    .map((endpoint) => `${endpoint.address} (${endpoint.packets})`)
+    .join(", ");
+  const ports = summary.ports
+    .slice(0, 5)
+    .map((port) => `${port.protocol}/${port.port} (${port.packets})`)
+    .join(", ");
+  const notes = [
+    `Top endpoints: ${endpoints || "none decoded"}.`,
+    `Top ports: ${ports || "none decoded"}.`,
+    "Payload contents are never displayed. The file was read locally and nothing was uploaded.",
+  ];
+  if (summary.limits.reached) {
+    notes.push(
+      `Review stopped at the local limit of ${summary.limits.maxPackets} packets.`,
+    );
+  }
+  if (captureSummaryNote) {
+    captureSummaryNote.textContent = notes.join(" ");
+  }
+}
+
 function renderCapabilityStatus(tab, capability) {
   const status = document.querySelector(`[data-capability-status="${tab.id}"]`);
   if (!status) {
@@ -246,6 +522,43 @@ function renderEmptyState(tab, capability, snapshot) {
   }
 
   const result = snapshot.results[tab.id];
+  if (tab.id === "capture") {
+    const captureState = capture.snapshot();
+    if (captureState.review) {
+      empty.textContent = `${captureState.review.fileName} was reviewed locally: ${captureState.review.summary.packetCount} packet${
+        captureState.review.summary.packetCount === 1 ? "" : "s"
+      }. Review the sensitive-data warnings below, then clear the capture when finished.`;
+      return;
+    }
+    if (result?.status === "complete" && result.data?.ok === false) {
+      empty.textContent = result.data.message;
+      return;
+    }
+    if (result?.status === "failed") {
+      empty.textContent = `${tab.label} failed safely: ${result.reason}`;
+      return;
+    }
+    if (captureState.state === "capturing") {
+      empty.textContent =
+        "A live capture is running and its indicator stays visible until you stop it. The file list is managed by the local capture provider.";
+      return;
+    }
+    if (!snapshot.authorized) {
+      empty.textContent =
+        "Offline review is ready, but lab mode is locked. Authorize lab mode before selecting and reading a capture.";
+      return;
+    }
+    if (selectedCapture) {
+      empty.textContent = `${selectedCapture.name} (${formatBytes(
+        selectedCapture.size,
+      )}) is selected locally. Nothing has been parsed or uploaded.`;
+      return;
+    }
+    empty.textContent =
+      "No capture selected. The panel never opens a file automatically.";
+    return;
+  }
+
   if (result?.status === "complete") {
     if (tab.id === "network" && result.data?.ok === false) {
       empty.textContent = result.data.message;
@@ -279,12 +592,6 @@ function renderEmptyState(tab, capability, snapshot) {
     empty.textContent = inventoryTarget?.value.trim()
       ? "No inventory has run for this range. Starting it is an explicit, foreground action."
       : "Enter a private or link-local range, then start the local inventory.";
-    return;
-  }
-  if (tab.id === "capture" && selectedCapture) {
-    empty.textContent = `${selectedCapture.name} (${formatBytes(
-      selectedCapture.size,
-    )}) is selected locally. Nothing has been parsed or uploaded.`;
     return;
   }
   empty.textContent = `No ${tab.label.toLowerCase()} has run. Starting it is an explicit, foreground action.`;
@@ -391,6 +698,7 @@ function render() {
   renderTabs(snapshot);
   renderTargetStatus();
   renderInventory(snapshot);
+  renderCapture(snapshot);
 
   for (const tab of snapshot.tabs) {
     const capability = tab.capability;
@@ -432,11 +740,12 @@ function authorizeLabMode() {
     setFeedback(result.message, "rejected");
   } else {
     const inventoryResult = inventory.authorize({ acknowledged: true });
+    const captureResult = capture.authorize({ acknowledged: true });
     setFeedback(
-      inventoryResult.ok
+      inventoryResult.ok && captureResult.ok
         ? `Lab mode authorized in session ${result.state.session.id}. Nothing has run yet.`
-        : inventoryResult.message,
-      inventoryResult.ok ? "accepted" : "rejected",
+        : inventoryResult.message || captureResult.message,
+      inventoryResult.ok && captureResult.ok ? "accepted" : "rejected",
     );
   }
   render();
@@ -445,9 +754,14 @@ function authorizeLabMode() {
 function stopAndClear() {
   const result = panel.stopAndClear();
   inventory.stopAndClear();
+  const captureResult = capture.stopAndClear();
   selectedCapture = null;
+  pendingReviewBytes = null;
   if (captureFile) {
     captureFile.value = "";
+  }
+  if (captureConsent) {
+    captureConsent.checked = false;
   }
   if (inventoryTarget) {
     inventoryTarget.value = "";
@@ -460,10 +774,12 @@ function stopAndClear() {
     acknowledgement.checked = false;
   }
   setFeedback(
-    result.wasAuthorized
-      ? "Lab mode stopped. Session results, the selected capture, and inventory results were cleared."
-      : "Lab mode is already locked; session results, the selected capture, and inventory results were cleared.",
-    "accepted",
+    captureResult.ok
+      ? result.wasAuthorized
+        ? "Lab mode stopped. Capture access was revoked; session results, the selected capture, capture files, and inventory results were cleared."
+        : "Lab mode is already locked; session results, the selected capture, capture files, and inventory results were cleared."
+      : captureResult.message,
+    captureResult.ok ? "accepted" : "rejected",
   );
   render();
 }
@@ -488,12 +804,99 @@ function runTab(tabId) {
         } in ${result.data.target.canonical}.`,
         "accepted",
       );
+    } else if (tabId === "capture" && result.data?.ok === false) {
+      setFeedback(
+        result.data.message || "The capture was refused safely.",
+        "rejected",
+      );
+    } else if (tabId === "capture" && result.data?.ok === true) {
+      const summary = result.data.summary;
+      setFeedback(
+        `Capture reviewed locally: ${summary.packetCount} packet${
+          summary.packetCount === 1 ? "" : "s"
+        }, ${formatBytes(summary.capturedBytes)}. Nothing was uploaded.`,
+        "accepted",
+      );
     } else {
       setFeedback(`${tab.label} completed locally.`, "accepted");
     }
   } else {
     setFeedback(result.message || "The action was refused safely.", "rejected");
   }
+  render();
+}
+
+async function reviewSelectedCapture() {
+  if (!panel.snapshot().authorized) {
+    setFeedback(
+      "Authorize lab mode before reading a capture file.",
+      "rejected",
+    );
+    render();
+    return;
+  }
+  if (!selectedCapture?.file) {
+    setFeedback("Choose a capture file before reviewing it.", "rejected");
+    render();
+    return;
+  }
+  if (selectedCapture.size > MAX_REVIEW_BYTES) {
+    setFeedback(
+      `The selected capture is larger than the local review limit of ${MAX_REVIEW_BYTES} bytes. Choose a smaller file or use the explicit desktop helper.`,
+      "rejected",
+    );
+    render();
+    return;
+  }
+
+  try {
+    const buffer = await selectedCapture.file.arrayBuffer();
+    pendingReviewBytes = new Uint8Array(buffer);
+    runTab("capture");
+  } catch (error) {
+    pendingReviewBytes = null;
+    const detail =
+      error instanceof Error && error.message ? error.message : String(error);
+    setFeedback(
+      `The selected capture could not be read locally (${detail}).`,
+      "rejected",
+    );
+    render();
+  }
+}
+
+function startCapture() {
+  const result = capture.start({ acknowledged: captureConsent?.checked === true });
+  if (result.ok) {
+    setFeedback(
+      `Live capture started: ${result.capture.label}. Its persistent indicator stays visible until you stop it.`,
+      "accepted",
+    );
+  } else {
+    setFeedback(result.message || "The capture was refused safely.", "rejected");
+  }
+  render();
+}
+
+function stopCapture() {
+  const result = capture.stop();
+  setFeedback(
+    result.ok
+      ? "Live capture stopped. The persistent indicator was cleared."
+      : result.message || "The capture reported a stop failure.",
+    result.ok ? "accepted" : "rejected",
+  );
+  render();
+}
+
+function clearCaptures() {
+  const result = capture.clearCaptures({ confirmed: true });
+  setFeedback(
+    result.ok
+      ? "Capture files were cleared through the local provider."
+      : result.message || "Capture files could not be fully cleared.",
+    result.ok ? "accepted" : "rejected",
+  );
   render();
 }
 
@@ -543,17 +946,35 @@ authorizeButton?.addEventListener("click", authorizeLabMode);
 stopButton?.addEventListener("click", stopAndClear);
 
 for (const button of runButtons) {
-  button.addEventListener("click", () => runTab(button.dataset.runTab));
+  button.addEventListener("click", () => {
+    if (button.dataset.runTab === "capture") {
+      reviewSelectedCapture();
+    } else {
+      runTab(button.dataset.runTab);
+    }
+  });
+}
+
+captureConsent?.addEventListener("change", () => render());
+captureStartButton?.addEventListener("click", startCapture);
+captureStopButton?.addEventListener("click", stopCapture);
+captureIndicatorStop?.addEventListener("click", stopCapture);
+captureClearButton?.addEventListener("click", clearCaptures);
+
+if (captureConsent) {
+  captureConsent.title = CAPTURE_CONSENT_STATEMENT;
 }
 
 captureFile?.addEventListener("change", () => {
   const file = captureFile.files?.[0] ?? null;
   selectedCapture = file
     ? {
+        file,
         name: typeof file.name === "string" && file.name ? file.name : "selected capture",
         size: file.size,
       }
     : null;
+  pendingReviewBytes = null;
   setFeedback(
     selectedCapture
       ? "Capture file selected. Nothing has been read, parsed, or uploaded."

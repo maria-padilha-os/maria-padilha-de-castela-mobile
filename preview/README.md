@@ -31,6 +31,16 @@ missing-provider state. The explicit
 cache that the user supplies. Tests use fixture data only and never scan a live
 network.
 
+The **Capture review** tab uses the
+[pcap capture/review contract](../docs/pcap-capture-review.md). Offline review
+is built in and reads a user-selected pcap or pcapng file only when the user
+presses the review action. It summarizes packet metadata, never keeps or shows
+payload contents, and warns about sensitive payloads. Live capture requires an
+explicit provider injected through `globalThis.CASTELA_CAPTURE_PROVIDER`; the
+stock preview never starts one. A user-started Android `VpnService` or an
+explicit non-root helper provider must keep a persistent indicator and a stop
+control. Tests generate pcap fixtures and never capture live traffic.
+
 This directory is static and offline: no build step, no package manager, no
 network calls, no telemetry. `palette-data.js` is generated from
 `docs/branding/tokens.json`:
@@ -42,10 +52,13 @@ python3 tools/export_preview_tokens.py
 Do not edit `palette-data.js` by hand.
 
 The security panel's pure registration/state contract lives in
-`security/security-panel.js`, and the inventory contract lives in
-`security/network-inventory.js`; `security/security.js` only binds them to the
-page. There are no timers, workers, network calls, or automatic scans. Optional
-local tool probes can be injected through `globalThis.CASTELA_SECURITY_TOOLS`
-and an explicit inventory provider through
-`globalThis.CASTELA_NETWORK_PROVIDER` during development; without adapters every
-tab shows a graceful missing-tool state.
+`security/security-panel.js`; the inventory contract lives in
+`security/network-inventory.js`; the capture/review contracts live in
+`security/pcap-capture.js` and `security/pcap-format.js`. `security/security.js`
+only binds them to the page. There are no timers, workers, network calls, or
+automatic scans. Optional local tool probes can be injected through
+`globalThis.CASTELA_SECURITY_TOOLS`, an explicit inventory provider through
+`globalThis.CASTELA_NETWORK_PROVIDER`, and an explicit live-capture provider
+through `globalThis.CASTELA_CAPTURE_PROVIDER` during development. Without
+adapters the network and live-capture paths show graceful missing-provider
+states; offline pcap review remains available.

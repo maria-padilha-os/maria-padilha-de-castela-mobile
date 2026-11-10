@@ -53,6 +53,25 @@
       </p>
     </section>
 
+    <div
+      id="capture-indicator"
+      class="capture-indicator"
+      role="status"
+      aria-live="polite"
+      hidden
+    >
+      <span class="icon icon-capture" aria-hidden="true"></span>
+      <div class="capture-indicator-text">
+        <strong id="capture-indicator-label">Capture active</strong>
+        <p id="capture-indicator-detail">
+          A persistent indicator must stay visible until the user stops capture.
+        </p>
+      </div>
+      <button id="capture-indicator-stop" class="secondary-button" type="button" disabled>
+        Stop capture
+      </button>
+    </div>
+
     <section class="lab-console" aria-labelledby="lab-console-title">
       <h2 id="lab-console-title" class="sr-only">Authorized lab mode</h2>
       <label class="acknowledgement" for="lab-ack">
@@ -236,7 +255,10 @@
       >
         <header class="tab-panel-header">
           <h3>Capture review</h3>
-          <p>Read-only review of a capture file you choose. Nothing is uploaded.</p>
+          <p>
+            Live capture is user-started and clearly indicated. Offline review
+            reads only a file you choose, and nothing is uploaded.
+          </p>
         </header>
         <div class="capability-line">
           <span class="status status-pending" data-capability-status="capture">Checking…</span>
@@ -244,8 +266,50 @@
         </div>
         <p class="capture-warning">
           <span class="icon icon-warning" aria-hidden="true"></span>
-          <span>Captures can contain credentials and third-party communications.
-          Keep them app-private and use Stop and clear when finished.</span>
+          <span>Captures can contain credentials, cookies, messages, and
+          third-party communications. Payloads are summarized, never displayed.
+          Keep capture files app-private and clear them when finished.</span>
+        </p>
+
+        <div class="capture-live" aria-labelledby="capture-live-title">
+          <div class="section-heading">
+            <h4 id="capture-live-title">Live capture</h4>
+            <span id="capture-provider-status" class="summary-badge">Checking provider…</span>
+          </div>
+          <p class="hint">
+            A signed Castela build captures through a user-started Android
+            <code>VpnService</code> with a persistent notification, or through an
+            explicit non-root helper adapter. This stock preview never starts a
+            live capture. No capture starts on first launch.
+          </p>
+          <label class="acknowledgement" for="capture-consent">
+            <input id="capture-consent" type="checkbox">
+            <span>
+              I consent to capture traffic on a network I own or am authorized
+              to test, and I understand this capture may contain sensitive
+              personal data that stays local until I clear it.
+            </span>
+          </label>
+          <div class="lab-actions">
+            <button id="capture-start" class="primary-button" type="button" disabled>
+              Start capture
+            </button>
+            <button id="capture-stop" class="secondary-button" type="button" disabled>
+              Stop capture
+            </button>
+            <button id="capture-clear" class="secondary-button" type="button" disabled>
+              Clear captures
+            </button>
+          </div>
+          <p id="capture-provider-reason" class="hint"></p>
+        </div>
+
+        <h4 class="capture-review-title">Offline review</h4>
+        <p class="hint">
+          Choose a <code>.pcap</code> or <code>.pcapng</code> file. The panel
+          reads it only when you press Review selected capture. The summary keeps
+          addresses, ports, protocols, and counters, and never keeps payload
+          contents.
         </p>
         <label class="file-field" for="capture-file">
           <span>User-selected capture file</span>
@@ -265,6 +329,30 @@
           </button>
         </div>
         <p class="status-note" data-run-feedback="capture" role="status" aria-live="polite"></p>
+
+        <div id="capture-summary" class="capture-summary" hidden>
+          <div class="section-heading">
+            <h4>Offline capture summary</h4>
+            <span id="capture-summary-badge" class="summary-badge">0 packets</span>
+          </div>
+          <dl id="capture-stats" class="capture-stats"></dl>
+          <div id="capture-warnings" class="capture-warnings"></div>
+          <div class="inventory-table-wrap">
+            <table class="inventory-table">
+              <caption class="sr-only">Top capture conversations</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Protocol</th>
+                  <th scope="col">Source</th>
+                  <th scope="col">Destination</th>
+                  <th scope="col">Packets / bytes</th>
+                </tr>
+              </thead>
+              <tbody id="capture-conversation-rows"></tbody>
+            </table>
+          </div>
+          <p id="capture-summary-note" class="hint"></p>
+        </div>
       </section>
 
       <section

@@ -59,7 +59,10 @@ and `preview/`:
   stop/clear, four inspection tabs, and graceful missing-tool states;
 - a local-network inventory extension with private/link-local range validation,
   explicit ownership confirmation, provider-based discovery, and fixture-tested
-  host/address/service-hint display.
+  host/address/service-hint display;
+- a pcap capture/review extension with a user-started VpnService or non-root
+  helper contract, a persistent capture indicator, offline pcap/pcapng
+  summaries, sensitive-payload warnings, and fixture-only tests.
 
 The boot animation, system font, system UI, lock screen, and default-app
 preinstallation still require a system image and a new ADR. Verified boot,
@@ -76,6 +79,7 @@ signing, and security-critical UI are unchanged. See
 - [Stock-device preview](docs/branding/preview.md)
 - [Security panel contract and safety boundaries](docs/security-panel.md)
 - [Local-network inventory contract, ranges, and helper](docs/local-network-inventory.md)
+- [Pcap capture and review contract, warnings, and helper](docs/pcap-capture-review.md)
 - [Asset provenance](docs/branding/asset-provenance.md)
 - [Machine-readable design tokens](docs/branding/tokens.json)
 
@@ -87,8 +91,10 @@ signing, and security-critical UI are unchanged. See
 - a dedicated local security panel with authorized lab mode (front-end
   implemented in `preview/security/`; the signed app remains a build task)
 - local network inventory with private/link-local range validation and an
-  explicit Termux/native helper (front-end contract implemented; pcap review and
-  permission/integrity audits remain planned)
+  explicit Termux/native helper (front-end contract implemented)
+- pcap capture/review with explicit consent, a persistent indicator, offline
+  pcap/pcapng summaries, and a documented non-root review helper (front-end
+  contract implemented; permission/integrity audits remain planned)
 - no automatic scanning, no hidden privileged service, no root, no telemetry
 - a setup companion that checks compatibility and links to the official
   GrapheneOS installation and update documentation
@@ -107,9 +113,11 @@ and release artifacts remain private. Do not claim this is official GrapheneOS.
 The security panel is an ordinary app. It does not provide kernel, baseband, or
 privileged visibility, and it must not claim to. Packet captures may contain
 personal data: capture only on networks you own or are authorized to test, keep
-data local, and delete it when finished. The local-network inventory accepts
-only private/link-local ranges, requires an explicit ownership confirmation
-before any provider runs, and never probes ports, exploits services, or captures
+data local, and delete it when finished. Live capture is user-started with a
+persistent indicator, never starts on first launch, and uses a VpnService or an
+explicit non-root helper provider. The local-network inventory accepts only
+private/link-local ranges, requires an explicit ownership confirmation before
+any provider runs, and never probes ports, exploits services, or captures
 credentials.
 
 ## License

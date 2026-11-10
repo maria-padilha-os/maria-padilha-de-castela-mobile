@@ -70,7 +70,7 @@ is attempted.
 | Tab | Capability | Visible to the panel | Not available to the panel |
 | --- | --- | --- | --- |
 | Network inventory | `networkInventory` | Hosts, addresses, and service hints from a validated private/link-local provider | Other apps' traffic, kernel sockets, raw packets, credentials, baseband |
-| Capture review | `captureReview` | A file the user explicitly chooses, reviewed offline | Automatic capture, remote upload, hidden capture service |
+| Capture review | `captureReview` | A user-started live capture through an explicit provider plus offline review of a file the user explicitly chooses | Automatic capture, remote upload, hidden capture service |
 | Permission audit | `permissionAudit` | App-visible permission state and explicitly granted usage access | Other users, hidden system packages, privileged policy state |
 | Device integrity | `deviceIntegrity` | App signer and configuration facts an ordinary app can read | Verified-boot state, baseband details, kernel attestation |
 
@@ -85,13 +85,21 @@ The network tab is implemented by the
 private/link-local target before calling a provider, requires the lab-mode
 acknowledgement, and rejects public ranges outright.
 
+The capture tab is implemented by the
+[pcap capture and review extension](pcap-capture-review.md). Its offline pcap
+parser is built in, so review is available without an installed tool. Live
+capture still needs an explicit user-started `VpnService` or non-root helper
+provider with a persistent indicator, and it never starts on first launch.
+
 ## 4. No automatic or hidden work
 
 The front-end and its contract contain:
 
 - no `setInterval`, `setTimeout`, animation loop, worker, or service worker;
 - no `fetch`, `XMLHttpRequest`, `WebSocket`, beacon, or remote resource;
-- no `VpnService`, root, raw socket, hidden API, or privileged permission;
+- no `VpnService` started by the preview, root, raw socket, hidden API, or
+  privileged permission; a signed build may start a user-started `VpnService`
+  only through the explicit capture provider contract;
 - no automatic file read, scan, capture, audit, or export;
 - no telemetry, analytics, crash-reporting SDK, or background sync.
 
@@ -105,8 +113,13 @@ exists. It does not inspect the network, files, permissions, or device state.
 - The inventory keeps only host, address, and service-hint fields. It discards
   password, credential, token, banner, and similar provider fields, and it never
   probes a service or captures credentials.
-- The preview reads a selected file's name and size only. It does not read file
-  contents.
+- The preview reads a selected capture's name and size until the user presses
+  **Review selected capture**. It then reads the file locally and keeps only
+  packet metadata: addresses, ports, protocols, counters, and size totals. It
+  never keeps or displays payload contents.
+- Capture summary warnings name sensitive payloads and plaintext services. The
+  extension has no upload path and never uploads captures automatically.
+- The preview does not read any other file automatically.
 - Packet captures may contain personal data. A visible warning appears in the
   banner and in the capture tab.
 - Export is out of scope for this front-end. Any future export must warn before
@@ -189,9 +202,11 @@ decision under ADR 0001's revisit triggers, not a change to this panel.
 
 - This is a front-end contract and offline preview, not a signed Android app or
   a claim that a device has been instrumented.
-- The preview has no built-in live network inventory, capture parser, permission
-  source, or integrity verifier. The network tab stays in a missing-provider
-  state until an explicit provider is injected; fixture providers are used only
-  in tests and offline previews.
+- The preview has no built-in live network inventory, live capture service,
+  permission source, or integrity verifier. The network tab stays in a
+  missing-provider state until an explicit provider is injected. Offline pcap
+  review is built in; live capture stays unavailable until an explicit
+  user-started provider is injected. Fixture providers are used only in tests
+  and offline previews.
 - GrapheneOS remains responsible for verified boot, OS updates, and system
   security. The panel does not change them.

@@ -40,11 +40,11 @@ export const PANEL_TABS = Object.freeze([
     icon: "capture",
     capability: "captureReview",
     actionLabel: "Review selected capture",
-    missingTitle: "No local pcap parser",
+    missingTitle: "No local pcap review capability",
     missingDetail:
-      "No capture parser is installed. Capture review stays offline and disabled until a user-selected file and a local parser are both available.",
+      "No capture review capability is registered. The preview binds a local pcap parser; a signed build must keep review offline and limited to a file the user selects.",
     scope:
-      "Read-only review of a file the user explicitly selects. Captures may contain personal data and are never uploaded.",
+      "User-started live capture through an explicit provider, plus read-only offline review of a file the user explicitly selects. Captures may contain personal data and are never uploaded automatically.",
   }),
   Object.freeze({
     id: "permissions",

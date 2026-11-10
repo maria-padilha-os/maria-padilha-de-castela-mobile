@@ -28,6 +28,7 @@ for path in \
   docs/branding/tokens.json \
   docs/security-panel.md \
   docs/local-network-inventory.md \
+  docs/pcap-capture-review.md \
   design/padilha_palette.py \
   preview/index.html \
   preview/styles.css \
@@ -40,7 +41,10 @@ for path in \
   preview/security/security.js \
   preview/security/security-panel.js \
   preview/security/network-inventory.js \
+  preview/security/pcap-capture.js \
+  preview/security/pcap-format.js \
   tools/network_inventory_helper.py \
+  tools/pcap_review_helper.py \
   android/design/src/main/res/values/colors.xml \
   android/design/src/main/res/values-night/colors.xml \
   android/overlays/padilha-palette/AndroidManifest.xml \
@@ -55,7 +59,8 @@ for path in \
   tests/test_light_surface_text.py \
   tests/test_preview.py \
   tests/test_security_panel.py \
-  tests/test_network_inventory.py; do
+  tests/test_network_inventory.py \
+  tests/test_pcap_capture.py; do
   require_file "$path"
 done
 
@@ -117,11 +122,11 @@ else
 fi
 
 tracked_artifacts=$(git ls-files | grep -E \
-  '(^|/)(out|releases|artifacts|keys|signing|secrets|proprietary|vendor)/|\.(img|iso|apk|aab|apks|keystore|jks|p12|pfx|pem|pk8|ota|bin|zip)$' \
+  '(^|/)(out|releases|artifacts|keys|signing|secrets|proprietary|vendor)/|\.(img|iso|apk|aab|apks|keystore|jks|p12|pfx|pem|pk8|ota|bin|zip|pcap|pcapng)$' \
   || true)
 
 if [ -n "$tracked_artifacts" ]; then
-  bad "tracked build, release, or key artifact"
+  bad "tracked build, release, key, or capture artifact"
   printf '%s\n' "$tracked_artifacts"
 else
   ok "no tracked build, release, or key artifact"
