@@ -19,6 +19,10 @@ GrapheneOS, rather than a full GrapheneOS fork and system-image build.
 - Reference device: **Pixel 9a (`tegu`)**, supported by GrapheneOS through
   April 2032.
 - First milestone: a private app suite, not a system image.
+- The [device support and flashing runbook](docs/device-support-and-flashing.md)
+  documents the supported path onto a physical Pixel: official GrapheneOS, a
+  manual bootloader unlock/flash/lock, then signed Castela apps. The repository
+  never flashes a device.
 - The Padilha design layer is implemented as Android resources, launcher assets,
   and an offline stock-device preview. No ROM has been built. No device has been
   flashed. No artifact has been released.
@@ -73,6 +77,7 @@ signing, and security-critical UI are unchanged. See
 ## Documentation
 
 - [ADR 0001: GrapheneOS base, device support, and Padilha branding](docs/adr/0001-grapheneos-base-device-support-and-padilha-branding.md)
+- [Device support matrix and flashing runbook](docs/device-support-and-flashing.md)
 - [Attribution, trademark, and redistribution rules](docs/legal/grapheneos-aosp-attribution.md)
 - [Padilha look-and-feel scope](docs/branding/padilha-look-and-feel.md)
 - [Overlay and system-build boundaries](docs/branding/overlay-and-build.md)
@@ -100,15 +105,24 @@ signing, and security-critical UI are unchanged. See
   GrapheneOS installation and update documentation
 
 Out of scope for this phase: installing or replacing the boot animation, system
-font replacement, system UI theming, preinstalled default apps, bootloader
-unlocking, ROM builds, and device flashing. The boot animation source in this
-repository is for a future system-image track only.
+font replacement, system UI theming, preinstalled default apps, Castela ROM
+builds, Castela system-image or OTA releases, and automated bootloader unlocking
+or device flashing. The [device support and flashing
+runbook](docs/device-support-and-flashing.md) documents the manual,
+official-GrapheneOS-only path; this repository does not execute it. The boot
+animation source in this repository is for a future system-image track only.
 
 ## Safety and privacy
 
-Do not flash a device until the device matrix, recovery documentation, and
-signed build pipeline exist. Do not publish builds or artifacts; the repository
-and release artifacts remain private. Do not claim this is official GrapheneOS.
+No Castela system image exists. Do not flash a Castela image or a custom ROM.
+The only supported device path is official GrapheneOS followed by signed Castela
+apps; follow the [device support and flashing
+runbook](docs/device-support-and-flashing.md) and the official GrapheneOS
+instructions. Unlocking the bootloader erases data and has security
+consequences, and the bootloader must be locked again before the device is used.
+No device has been flashed or validated by this repository. Do not publish builds
+or artifacts; the repository and release artifacts remain private. Do not claim
+this is official GrapheneOS.
 
 The security panel is an ordinary app. It does not provide kernel, baseband, or
 privileged visibility, and it must not claim to. Packet captures may contain
