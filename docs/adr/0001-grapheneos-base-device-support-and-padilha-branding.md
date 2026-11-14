@@ -35,8 +35,9 @@ release. It records the architecture decision and the rules that follow from it.
 **Adopt option 2: a device-side Padilha overlay and companion apps on top of a
 stock, official GrapheneOS release.**
 
-**Reference device: Pixel 9a (`tegu`), unlocked, running the current stable
-GrapheneOS release.**
+**Reference device: Pixel 9a (`tegu`), unlocked only for the official GrapheneOS
+installation and then locked for use and release validation, running the current
+stable GrapheneOS release.**
 
 Concretely:
 
@@ -52,6 +53,14 @@ Concretely:
 - The repository and artifacts stay private. Any distribution to testers is a
   redistribution event and requires the legal review described in the linked
   legal rules.
+
+**Documentation addendum (2026-11-14).** The
+[device support and flashing runbook](../device-support-and-flashing.md) now
+documents the manual, official-GrapheneOS-only path onto a supported Pixel,
+including bootloader-unlock warnings, backup, preflight checks, flashing, and
+recovery. It is documentation for installing official GrapheneOS followed by
+signed Castela apps, not a Castela system image. No repository script unlocks,
+erases, or flashes a device.
 
 A full fork is not rejected forever. It is deferred until the triggers in
 [Revisit triggers](#revisit-triggers) are met and a new ADR approves it.
@@ -350,7 +359,7 @@ that is still sold is not necessarily still supported.
 | Pixel 10 | `frankel` | August 2032 | Compatibility testing |
 | Pixel 10 Pro | `blazer` | August 2032 | Compatibility testing |
 | Pixel 10 Pro XL | `mustang` | August 2032 | Compatibility testing |
-| Pixel 10 Pro Fold | `rango` | August 2032 | Best-effort foldable layout |
+| Pixel 10 Pro Fold | `rango` | October 2032 | Best-effort foldable layout |
 | Pixel 10a | `stallion` | March 2033 | Future reference; compatibility testing |
 | Pixel 7 | `panther` | October 2027 | Legacy best-effort |
 | Pixel 7 Pro | `cheetah` | October 2027 | Legacy best-effort |
@@ -574,9 +583,11 @@ new ADR only if one or more of these is true:
 
 ## Out of scope
 
-- Building, flashing, or releasing a ROM.
+- Building, flashing, or releasing a Castela ROM or system image.
 - Generating or storing OS signing keys, AVB keys, or OTA metadata.
-- Providing bootloader-unlock or device-flashing instructions.
+- Providing automated bootloader-unlock or device-flashing scripts. The manual
+  official-GrapheneOS runbook is documentation only; it does not authorize a
+  Castela image.
 - Shipping actual app code, design binaries, or wallpapers in this task.
 - Public release, public repository mirror, or public artifact hosting.
 - Legal advice. The linked legal rules are an engineering policy and must be

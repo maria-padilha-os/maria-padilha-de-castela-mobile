@@ -20,6 +20,7 @@ require_file() {
 for path in \
   README.md \
   docs/adr/0001-grapheneos-base-device-support-and-padilha-branding.md \
+  docs/device-support-and-flashing.md \
   docs/legal/grapheneos-aosp-attribution.md \
   docs/branding/padilha-look-and-feel.md \
   docs/branding/overlay-and-build.md \
@@ -45,6 +46,7 @@ for path in \
   preview/security/pcap-format.js \
   tools/network_inventory_helper.py \
   tools/pcap_review_helper.py \
+  tools/check_flash_inputs.py \
   android/design/src/main/res/values/colors.xml \
   android/design/src/main/res/values-night/colors.xml \
   android/overlays/padilha-palette/AndroidManifest.xml \
@@ -60,7 +62,8 @@ for path in \
   tests/test_preview.py \
   tests/test_security_panel.py \
   tests/test_network_inventory.py \
-  tests/test_pcap_capture.py; do
+  tests/test_pcap_capture.py \
+  tests/test_device_support.py; do
   require_file "$path"
 done
 
