@@ -1,0 +1,107 @@
+# Example private signing configuration.
+#
+# Copy this file outside the repository, replace every /srv/castela-private path
+# with the real offline key or authenticated private-store location, and fill in
+# the expected key digests. Never put a private key, password, keystore, or
+# certificate private key in this file or in the checkout.
+#
+# Validate with:
+#   python3 -m release.pipeline validate-config --config /path/to/signing.toml
+#   python3 -m release.pipeline validate-config --config /path/to/signing.toml --require-material
+#
+# The signing host is offline or on an isolated signing network. The artifact
+# store is a private filesystem or a private bucket with public access blocked.
+
+schema = 1
+project = "maria-padilha-de-castela-mobile"
+release_channel = "private"
+
+[store]
+# A local encrypted volume or an access-controlled private mount. Any path under
+# the repository is rejected. No public Pages, release page, package mirror, or
+# unauthenticated HTTP(S) location is accepted here.
+uri = "file:///srv/castela-private/releases"
+visibility = "private"
+access = "filesystem"
+
+[approval]
+# Human approval is mandatory and cannot be disabled. Use min_approvers = 2 for
+# OTA/factory image promotion in production.
+required = true
+min_approvers = 1
+max_age_hours = 72
+checklist = "docs/release-checklist.md"
+
+[[keys]]
+# One offline app-signing key per app in the full suite; this example covers the
+# shared app release identity used by the current app-layer build.
+id = "castela-app-release"
+role = "app"
+algorithm = "RSA-4096"
+path = "/srv/castela-private/keys/app-release.p12"
+certificate = "/srv/castela-private/keys/app-release-cert.pem"
+alias = "castela-app"
+custody = "offline-hsm-with-encrypted-backup"
+# sha256 = "REPLACE_WITH_SHA256_OF_THE_KEY_FILE"
+
+[[keys]]
+id = "castela-ota-release"
+role = "ota"
+algorithm = "RSA-4096"
+path = "/srv/castela-private/keys/ota-release.pem"
+certificate = "/srv/castela-private/keys/ota-release-cert.pem"
+custody = "offline-hsm-with-encrypted-backup"
+# sha256 = "REPLACE_WITH_SHA256_OF_THE_KEY_FILE"
+
+[[keys]]
+id = "castela-factory-release"
+role = "factory"
+algorithm = "RSA-4096"
+path = "/srv/castela-private/keys/factory-release.pem"
+certificate = "/srv/castela-private/keys/factory-release-cert.pem"
+custody = "offline-hsm-with-encrypted-backup"
+# sha256 = "REPLACE_WITH_SHA256_OF_THE_KEY_FILE"
+
+[[keys]]
+id = "castela-manifest-release"
+role = "manifest"
+algorithm = "RSA-4096"
+path = "/srv/castela-private/keys/manifest-release.pem"
+certificate = "/srv/castela-private/keys/manifest-release-cert.pem"
+custody = "offline-hsm-with-encrypted-backup"
+# sha256 = "REPLACE_WITH_SHA256_OF_THE_KEY_FILE"
+
+# Each command receives only the placeholders it declares. The pipeline invokes
+# commands directly, with no shell, and never passes a key password on the
+# command line. Provide the password through the signer's own OS keyring or
+# hardware token. Replace the image signers with the audited image-build tools
+# used by the private system-image track.
+[[signers]]
+role = "app"
+command = [
+  "apksigner", "sign",
+  "--ks", "{key}",
+  "--ks-key-alias", "{alias}",
+  "--out", "{output}",
+  "{input}",
+]
+
+[[signers]]
+role = "ota"
+command = [
+  "/srv/castela-private/bin/sign-ota",
+  "--key", "{key}",
+  "--cert", "{cert}",
+  "--input", "{input}",
+  "--output", "{output}",
+]
+
+[[signers]]
+role = "factory"
+command = [
+  "/srv/castela-private/bin/sign-factory-image",
+  "--key", "{key}",
+  "--cert", "{cert}",
+  "--input", "{input}",
+  "--output", "{output}",
+]

@@ -29,6 +29,8 @@ for path in \
   docs/security-panel.md \
   docs/local-network-inventory.md \
   docs/pcap-capture-review.md \
+  docs/release-pipeline.md \
+  docs/release-checklist.md \
   design/padilha_palette.py \
   preview/index.html \
   preview/styles.css \
@@ -45,10 +47,18 @@ for path in \
   preview/security/pcap-format.js \
   tools/network_inventory_helper.py \
   tools/pcap_review_helper.py \
+  tools/release_manifest.py \
   android/design/src/main/res/values/colors.xml \
   android/design/src/main/res/values-night/colors.xml \
   android/overlays/padilha-palette/AndroidManifest.xml \
   android/system/bootanimation/desc.txt \
+  release/__init__.py \
+  release/config.py \
+  release/approval.py \
+  release/checksums.py \
+  release/pipeline.py \
+  release/signing.example.toml \
+  release/README.md \
   assets/wallpapers/padilha-dark-1440x3120.webp \
   assets/fonts/Inter-Regular.woff2 \
   assets/icons/ic_home.svg \
@@ -60,7 +70,12 @@ for path in \
   tests/test_preview.py \
   tests/test_security_panel.py \
   tests/test_network_inventory.py \
-  tests/test_pcap_capture.py; do
+  tests/test_pcap_capture.py \
+  tests/test_release_config.py \
+  tests/test_release_checksums.py \
+  tests/test_release_pipeline.py \
+  tests/test_release_privacy.py \
+  tests/release_support.py; do
   require_file "$path"
 done
 

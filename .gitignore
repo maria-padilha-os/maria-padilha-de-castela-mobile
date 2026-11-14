@@ -39,3 +39,9 @@ proprietary/
 vendor/
 *.pcap
 *.pcapng
+
+# Release approvals, detached signatures, and private staging are never source.
+approvals/
+*.sig
+*.idsig
+*.sha256
