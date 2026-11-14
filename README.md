@@ -66,7 +66,11 @@ and `preview/`:
   host/address/service-hint display;
 - a pcap capture/review extension with a user-started VpnService or non-root
   helper contract, a persistent capture indicator, offline pcap/pcapng
-  summaries, sensitive-payload warnings, and fixture-only tests.
+  summaries, sensitive-payload warnings, and fixture-only tests;
+- a conservative private mobile defaults baseline with a setup checklist and a
+  read-only diagnostic covering telemetry, background services, offensive
+  tooling, permissions, USB/Wi-Fi/Bluetooth exposure, lock-screen behaviour,
+  sensor indicators, and the Padilha UX review.
 
 The boot animation, system font, system UI, lock screen, and default-app
 preinstallation still require a system image and a new ADR. Verified boot,
@@ -83,6 +87,8 @@ signing, and security-critical UI are unchanged. See
 - [Overlay and system-build boundaries](docs/branding/overlay-and-build.md)
 - [Stock-device preview](docs/branding/preview.md)
 - [Security panel contract and safety boundaries](docs/security-panel.md)
+- [Private mobile defaults and GrapheneOS invariants](docs/private-mobile-defaults.md)
+- [Private mobile setup checklist](docs/setup-checklist.md)
 - [Local-network inventory contract, ranges, and helper](docs/local-network-inventory.md)
 - [Pcap capture and review contract, warnings, and helper](docs/pcap-capture-review.md)
 - [Asset provenance](docs/branding/asset-provenance.md)
@@ -100,6 +106,9 @@ signing, and security-critical UI are unchanged. See
 - pcap capture/review with explicit consent, a persistent indicator, offline
   pcap/pcapng summaries, and a documented non-root review helper (front-end
   contract implemented; permission/integrity audits remain planned)
+- a private mobile defaults baseline, setup checklist, and read-only diagnostic
+  with no telemetry, no unnecessary background services, and no default
+  offensive tooling at boot (implemented as policy and tooling)
 - no automatic scanning, no hidden privileged service, no root, no telemetry
 - a setup companion that checks compatibility and links to the official
   GrapheneOS installation and update documentation
@@ -133,6 +142,15 @@ explicit non-root helper provider. The local-network inventory accepts only
 private/link-local ranges, requires an explicit ownership confirmation before
 any provider runs, and never probes ports, exploits services, or captures
 credentials.
+
+The private mobile defaults are conservative and battery-safe: no telemetry, no
+unnecessary background services, and no default offensive tooling at boot.
+Verified boot, SELinux enforcing mode, and app sandboxing remain GrapheneOS
+responsibilities and must not be weakened. Permission defaults, USB, Wi-Fi, and
+Bluetooth exposure, lock-screen behaviour, and sensor indicators are reviewed in
+[the private mobile defaults policy](docs/private-mobile-defaults.md) and the
+[setup checklist](docs/setup-checklist.md). The diagnostic script is read-only;
+it does not run privileged commands or automatic suspend/reboot tests.
 
 ## License
 

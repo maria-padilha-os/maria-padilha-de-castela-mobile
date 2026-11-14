@@ -28,6 +28,8 @@ for path in \
   docs/branding/asset-provenance.md \
   docs/branding/tokens.json \
   docs/security-panel.md \
+  docs/private-mobile-defaults.md \
+  docs/setup-checklist.md \
   docs/local-network-inventory.md \
   docs/pcap-capture-review.md \
   design/padilha_palette.py \
@@ -47,6 +49,7 @@ for path in \
   tools/network_inventory_helper.py \
   tools/pcap_review_helper.py \
   tools/check_flash_inputs.py \
+  tools/private_defaults_diagnostic.py \
   android/design/src/main/res/values/colors.xml \
   android/design/src/main/res/values-night/colors.xml \
   android/overlays/padilha-palette/AndroidManifest.xml \
@@ -63,7 +66,8 @@ for path in \
   tests/test_security_panel.py \
   tests/test_network_inventory.py \
   tests/test_pcap_capture.py \
-  tests/test_device_support.py; do
+  tests/test_device_support.py \
+  tests/test_private_defaults.py; do
   require_file "$path"
 done
 
@@ -89,6 +93,13 @@ for generator in \
     bad "$generator"
   fi
 done
+
+if python3 tools/private_defaults_diagnostic.py --template \
+  | python3 tools/private_defaults_diagnostic.py >/dev/null; then
+  ok "private defaults diagnostic template"
+else
+  bad "private defaults diagnostic template"
+fi
 
 if python3 -m unittest discover -s tests -t . -p 'test_*.py' -v; then
   ok "design-system unit tests"
