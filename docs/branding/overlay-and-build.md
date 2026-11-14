@@ -118,6 +118,10 @@ is expected to:
   optional overlay is used, one target package per overlay;
 - keep `assets/fonts/OFL-*.txt` with the bundled font outputs;
 - run `tests/all.sh` before release;
+- use the [private release and signing pipeline](../release-pipeline.md) and the
+  [release checklist](../release-checklist.md) for every signed app, OTA, or
+  factory-image artifact; signing keys stay outside the repository and the
+  artifact store stays private;
 - generate `bootanimation.zip` only inside a future, separately authorized
   system-image build. The ZIP stays out of Git and out of the app layer.
 
@@ -136,4 +140,5 @@ security-critical UI.
 - Status colours are always paired with an icon and a text label.
 - The preview is read-only and offline. It makes no network calls and requests no
   Android permissions.
-- The repository and its artifacts remain private.
+- The repository and its artifacts remain private. No public Pages site, release
+  page, package mirror, or unauthenticated artifact URL is permitted.

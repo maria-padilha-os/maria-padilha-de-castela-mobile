@@ -26,6 +26,10 @@ GrapheneOS, rather than a full GrapheneOS fork and system-image build.
 - The Padilha design layer is implemented as Android resources, launcher assets,
   and an offline stock-device preview. No ROM has been built. No device has been
   flashed. No artifact has been released.
+- A private release and signing pipeline is implemented for app, OTA, and
+  factory-image artifacts. Keys live outside the repository, a checksum manifest
+  covers every signed file, and signing requires explicit named human approval.
+  Nothing in the pipeline publishes to a public site or mirror.
 
 A full fork is deferred and requires a new ADR. See the
 [revisit triggers](docs/adr/0001-grapheneos-base-device-support-and-padilha-branding.md#revisit-triggers).
@@ -86,6 +90,8 @@ signing, and security-critical UI are unchanged. See
 - [Padilha look-and-feel scope](docs/branding/padilha-look-and-feel.md)
 - [Overlay and system-build boundaries](docs/branding/overlay-and-build.md)
 - [Stock-device preview](docs/branding/preview.md)
+- [Private release and signing pipeline](docs/release-pipeline.md)
+- [Release checklist](docs/release-checklist.md)
 - [Security panel contract and safety boundaries](docs/security-panel.md)
 - [Private mobile defaults and GrapheneOS invariants](docs/private-mobile-defaults.md)
 - [Private mobile setup checklist](docs/setup-checklist.md)
@@ -130,8 +136,9 @@ runbook](docs/device-support-and-flashing.md) and the official GrapheneOS
 instructions. Unlocking the bootloader erases data and has security
 consequences, and the bootloader must be locked again before the device is used.
 No device has been flashed or validated by this repository. Do not publish builds
-or artifacts; the repository and release artifacts remain private. Do not claim
-this is official GrapheneOS.
+or artifacts; the repository and release artifacts remain private. The release
+pipeline rejects public or anonymous artifact stores and requires a named human
+approval before a signing key is used. Do not claim this is official GrapheneOS.
 
 The security panel is an ordinary app. It does not provide kernel, baseband, or
 privileged visibility, and it must not claim to. Packet captures may contain
