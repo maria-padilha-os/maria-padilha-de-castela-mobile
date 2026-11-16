@@ -1,5 +1,9 @@
 # ADR 0001: GrapheneOS base, device support, and Padilha branding
 
+> **Visibility update (2026-11-16):** The source repository is public now.
+> Statements below about keeping the repository private are superseded. Build
+> and release artifacts, signing keys, and tester distributions remain private.
+
 - **Status:** Accepted
 - **Date:** 2026-11-06
 - **Deciders:** Castela Mobile maintainers
