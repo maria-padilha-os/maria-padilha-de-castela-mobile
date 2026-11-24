@@ -1,5 +1,7 @@
 # Castela Mobile
 
+[![❤ Sponsor on GitHub](https://img.shields.io/badge/%E2%9D%A4%20Sponsor-GitHub-ea4aaa?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/Mateus-M-Reis)
+
 Privacy-focused cybersecurity mobile experience for GrapheneOS, with the look
 and feel of Maria Padilha. **The source is public; build and release artifacts
 remain private.**
